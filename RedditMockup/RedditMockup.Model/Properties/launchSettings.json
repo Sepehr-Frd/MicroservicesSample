@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "RedditMockup.Model": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:58663;http://localhost:58664",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

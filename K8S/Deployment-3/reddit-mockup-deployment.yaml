@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reddit-mockup-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redditmockup
+  template:
+    metadata:
+      labels:
+        app: redditmockup
+    spec:
+      containers:
+        - name: redditmockup
+          image: local/reddit-mockup-web:1.0
+          resources:
+            limits:
+              memory: "250Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reddit-mockup-clusterip-service
+spec:
+  type: ClusterIP
+  selector:
+    app: redditmockup
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+    - name: rm-grpc
+      protocol: TCP
+      port: 666
+      targetPort: 666

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 15672
+              name: management-port
+            - containerPort: 5672
+              name: message-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-clusterip-service
+spec:
+  type: ClusterIP
+  selector:
+    app: rabbitmq
+  ports:
+    - name: management-port
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: message-port
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: rabbitmq
+  ports:
+    - name: management-port
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: message-port
+      protocol: TCP
+      port: 5672
+      targetPort: 5672

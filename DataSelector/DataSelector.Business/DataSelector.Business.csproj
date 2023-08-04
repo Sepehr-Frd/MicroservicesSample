@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Businesses\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataSelector.Model\DataSelector.Model.csproj" />
+    <ProjectReference Include="..\DataSelector.DataAccess\DataSelector.DataAccess.csproj" />
+  </ItemGroup>
+</Project>

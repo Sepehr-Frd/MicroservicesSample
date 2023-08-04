@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Base\" />
+        <None Remove="Businesses\" />
+        <None Remove="Contracts\" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="DomainEntityBusinesses\" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RedditMockup.Common\RedditMockup.Common.csproj" />
+        <ProjectReference Include="..\RedditMockup.DataAccess\RedditMockup.DataAccess.csproj" />
+        <ProjectReference Include="..\RedditMockup.ExternalServices\RedditMockup.ExternalService.csproj" />
+    </ItemGroup>
+</Project>

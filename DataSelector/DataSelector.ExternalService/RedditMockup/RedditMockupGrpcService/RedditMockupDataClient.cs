@@ -6,26 +6,16 @@ using RedditMockup;
 
 namespace DataSelector.ExternalService.RedditMockup.RedditMockupGrpcService;
 
-public class RedditMockupDataClient : IRedditMockupDataClient
+public class RedditMockupDataClient(IConfiguration configuration, IMapperBase mapper) : IRedditMockupDataClient
 {
-    private readonly IConfiguration _configuration;
-
-    private readonly IMapper _mapper;
-
-    public RedditMockupDataClient(IConfiguration configuration, IMapper mapper)
-    {
-        _configuration = configuration;
-        _mapper = mapper;
-    }
-
     public IEnumerable<QuestionResponseDto>? ReturnAllQuestions()
     {
-        var grpcAddress = _configuration.GetValue<string>("RedditMockupGrpc");
+        var grpcAddress = configuration.GetValue<string>("RedditMockupGrpc");
 
         if (grpcAddress is null)
         {
             Console.WriteLine("RedditMockupGrpc address in appsettings is null or invalid!");
-            
+
             return null;
         }
 
@@ -38,7 +28,7 @@ public class RedditMockupDataClient : IRedditMockupDataClient
         try
         {
             var reply = client.GetAllQuestions(request);
-            return _mapper.Map<IEnumerable<QuestionResponseDto>>(reply.Question);
+            return mapper.Map<IEnumerable<QuestionResponseDto>>(reply.Question);
         }
         catch (Exception exception)
         {

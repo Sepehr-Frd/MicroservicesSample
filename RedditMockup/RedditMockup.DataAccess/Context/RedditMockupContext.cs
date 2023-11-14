@@ -9,15 +9,15 @@ namespace RedditMockup.DataAccess.Context;
 
 public class RedditMockupContext : DbContext
 {
-    #region [Constructor]
+    // [Constructor]
 
     public RedditMockupContext(DbContextOptions options) : base(options)
     {
     }
 
-    #endregion
+    
 
-    #region [Properties]
+    // [Properties]
 
     public DbSet<Answer>? Answers { get; set; }
 
@@ -39,9 +39,9 @@ public class RedditMockupContext : DbContext
 
     public DbSet<Bookmark>? Bookmarks { get; set; }
 
-    #endregion
+    
 
-    #region [Methods]
+    // [Methods]
 
     private static IEnumerable<Person> GetFakePeople()
     {
@@ -285,24 +285,24 @@ public class RedditMockupContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        #region [Index Configuration]
+        // [Index Configuration]
 
         modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
 
-        #endregion
+        
 
-        #region [Relationship Configuration]
+        // [Relationship Configuration]
 
-        #region [Person Relationships]
+        // [Person Relationships]
 
         modelBuilder.Entity<User>()
             .HasOne<Person>(user => user.Person)
             .WithOne(person => person.User)
             .HasForeignKey<User>(user => user.PersonId);
 
-        #endregion
+        
 
-        #region [User Relationships]
+        // [User Relationships]
 
         modelBuilder.Entity<Profile>()
             .HasOne<User>(profile => profile.User)
@@ -331,9 +331,9 @@ public class RedditMockupContext : DbContext
             .WithMany(user => user.Bookmarks)
             .HasForeignKey(bookmark => bookmark.UserId);
 
-        #endregion
+        
 
-        #region [Question Relationships]
+        // [Question Relationships]
 
         modelBuilder.Entity<Bookmark>()
             .HasOne<Question>(bookmark => bookmark.Question)
@@ -350,29 +350,29 @@ public class RedditMockupContext : DbContext
             .WithMany(question => question.Votes)
             .HasForeignKey(vote => vote.QuestionId);
 
-        #endregion
+        
 
-        #region [Answer Relationships]
+        // [Answer Relationships]
 
         modelBuilder.Entity<AnswerVote>()
             .HasOne<Answer>(vote => vote.Answer)
             .WithMany(answer => answer.Votes)
             .HasForeignKey(vote => vote.AnswerId);
 
-        #endregion
+        
 
-        #region [Role Relationships]
+        // [Role Relationships]
 
         modelBuilder.Entity<UserRole>()
             .HasOne<Role>(userRole => userRole.Role)
             .WithMany(role => role.UserRoles)
             .HasForeignKey(userRole => userRole.RoleId);
 
-        #endregion
+        
 
-        #endregion
+        
 
-        #region [Seed Data]
+        // [Seed Data]
 
         modelBuilder.Entity<Role>().HasData(new List<Role>
         {
@@ -406,8 +406,8 @@ public class RedditMockupContext : DbContext
 
         modelBuilder.Entity<Bookmark>().HasData(GetFakeBookmarks());
 
-        #endregion
+        
     }
 
-    #endregion
+    
 }

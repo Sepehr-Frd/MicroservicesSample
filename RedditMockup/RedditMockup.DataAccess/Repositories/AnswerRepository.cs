@@ -7,21 +7,21 @@ namespace RedditMockup.DataAccess.Repositories;
 
 public class AnswerRepository : BaseRepository<Answer>
 {
-    #region [Fields]
+    // [Fields]
 
     private readonly RedditMockupContext _context;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
     public AnswerRepository(RedditMockupContext context, ISieveProcessor sieveProcessor) :
         base(context, sieveProcessor) =>
         _context = context;
 
-    #endregion
+    
 
-    #region [Methods]
+    // [Methods]
 
     public async Task<AnswerVote?> SubmitVoteAsync(AnswerVote answerVote, CancellationToken cancellationToken = default)
     {
@@ -30,6 +30,6 @@ public class AnswerRepository : BaseRepository<Answer>
         return entityEntry.Entity;
     }
 
-    #endregion
+    
 
 }

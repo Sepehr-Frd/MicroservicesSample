@@ -13,7 +13,7 @@ namespace RedditMockup.Business.DomainEntityBusinesses;
 
 public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
 {
-    #region [Fields]
+    // [Fields]
 
     private readonly QuestionRepository _questionRepository;
 
@@ -21,9 +21,9 @@ public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
 
     private readonly IMapper _mapper;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
     public QuestionBusiness(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, unitOfWork.QuestionRepository!, mapper)
     {
@@ -34,9 +34,9 @@ public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
         _mapper = mapper;
     }
 
-    #endregion
+    
 
-    #region [Methods]
+    // [Methods]
 
     public override async Task<Question?> CreateAsync(QuestionDto answerDto, CancellationToken cancellationToken = default)
     {
@@ -150,5 +150,5 @@ public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
         return CustomResponse.CreateSuccessfulResponse($"{(kind ? "Up" : "Down")}vote submitted");
     }
 
-    #endregion
+    
 }

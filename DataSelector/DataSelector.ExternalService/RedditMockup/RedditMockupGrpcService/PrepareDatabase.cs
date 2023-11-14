@@ -37,4 +37,3 @@ public static class PrepareDatabase
         await questionRepository.CreateManyAsync(questions);
     }
 }
-

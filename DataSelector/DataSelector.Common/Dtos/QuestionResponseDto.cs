@@ -6,4 +6,3 @@ public class QuestionResponseDto
 
     public string? Description { get; set; }
 }
-

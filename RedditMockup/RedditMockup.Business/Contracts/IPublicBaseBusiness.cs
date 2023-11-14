@@ -3,7 +3,7 @@ using Sieve.Models;
 
 namespace RedditMockup.Business.Contracts;
 
-public interface IPublicBaseBusiness<TEntity, TDto>
+public interface IPublicBaseBusiness<TDto>
 {
     Task<CustomResponse<TDto>> PublicCreateAsync(TDto dto, CancellationToken cancellationToken = default);
 

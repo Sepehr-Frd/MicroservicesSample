@@ -16,7 +16,7 @@ namespace RedditMockup.IntegrationTest;
 
 public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>>
 {
-    #region [Field(s)]
+    // |------------------------------------|Fields|-------------------------------------------->
 
     private const string BaseAddress = "/api/Answer";
 
@@ -28,7 +28,7 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
     private readonly HttpClient _client;
 
-    #endregion
+    // <--------------------------------------------------------------------------------|
 
     public enum TestResultCode
     {
@@ -37,7 +37,7 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         Unauthorized
     }
 
-    #region [Constructor]
+    // |------------------------------------|Constructor|-------------------------------------------->
 
     public AnswerControllerTest(WebApplicationFactory<Program> factory)
     {
@@ -46,9 +46,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         _client = customFactory.CreateClient();
     }
 
-    #endregion
+    // <--------------------------------------------------------------------------------|
 
-    #region [Method(s)]
+    // |------------------------------------|Methods|-------------------------------------------->
 
     private async Task AuthenticateAsync()
     {
@@ -66,23 +66,23 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         await _client.PostAsync(LoginAddress, stringContent);
     }
 
-    #endregion
+    // <--------------------------------------------------------------------------------|
 
-    #region [Theory Method(s)]
 
+    // |------------------------------------|Theory Methods|-------------------------------------------->
     [Theory]
     [MemberData(nameof(GenerateCreateData))]
     public async Task Create_ReturnExpectedResult(AnswerDto dto, TestResultCode testResultCode)
     {
-        #region [Arrange]
+        // [Arrange]
 
         var serializedLoginDto = JsonSerializer.Serialize(dto);
 
         var stringContent = new StringContent(serializedLoginDto, Encoding.UTF8, "application/json");
 
-        #endregion
+        
 
-        #region [Act]
+        // [Act]
 
         if (testResultCode != TestResultCode.Unauthorized) await AuthenticateAsync();
 
@@ -98,9 +98,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         switch (testResultCode)
         {
@@ -127,13 +127,13 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
                 break;
         }
 
-        #endregion
+        
     }
 
     [Fact]
     public async Task GetAll_ReturnCustomResponseOfListOfAnswerDto()
     {
-        #region [Act]
+        // [Act]
 
         var response = await _client.GetAsync(BaseAddress);
 
@@ -142,15 +142,15 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         var apiResponse = await Task.Factory.StartNew(() =>
             JsonConvert.DeserializeObject<CustomResponse<List<AnswerDto>>>(streamResponse));
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         apiResponse?.Data?.Should().BeOfType<List<AnswerDto>>();
 
-        #endregion
+        
     }
 
     [Theory]
@@ -159,13 +159,13 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
     {
         if (isAuthenticated)
         {
-            #region [Arrange]
+            // [Arrange]
 
             await AuthenticateAsync();
 
-            #endregion
+            
 
-            #region [Act]
+            // [Act]
 
             var response = await _client.GetAsync(BaseAddress + "/id" + $"?id={id}");
 
@@ -173,9 +173,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
             var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-            #endregion
+            
 
-            #region [Assert]
+            // [Assert]
 
             response.StatusCode.Should().Be(httpStatusCode);
 
@@ -184,21 +184,21 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             else
                 apiResponse?.IsSuccess.Should().BeTrue();
 
-            #endregion
+            
         }
         else
         {
-            #region [Act]
+            // [Act]
 
             var response = await _client.GetAsync(BaseAddress + "/id" + $"?id={id}");
 
-            #endregion
+            
 
-            #region [Assert]
+            // [Assert]
 
             response.StatusCode.Should().Be(httpStatusCode);
 
-            #endregion
+            
         }
     }
 
@@ -206,7 +206,7 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
     [MemberData(nameof(GenerateUpdateData))]
     public async Task Update_ReturnExpectedResult(int answerId, AnswerDto dto, TestResultCode testResultCode)
     {
-        #region [Arrange]
+        // [Arrange]
 
         var serializedLoginDto = JsonSerializer.Serialize(dto);
 
@@ -217,9 +217,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             await AuthenticateAsync();
         }
 
-        #endregion
+        
 
-        #region [Act]
+        // [Act]
 
         var response = await _client.PutAsync($"{BaseAddress}?id={answerId}", stringContent);
 
@@ -233,9 +233,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         switch (testResultCode)
         {
@@ -262,14 +262,14 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
                 break;
         }
 
-        #endregion
+        
 
     }
 
     [Fact]
     public async Task GetVotes_ReturnCustomResponseOfListOfVoteDto()
     {
-        #region [Act]
+        // [Act]
 
         var response = await _client.GetAsync(BaseAddress + "/AnswerVotes");
 
@@ -278,38 +278,38 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         var apiResponse = await Task.Factory.StartNew(() =>
             JsonConvert.DeserializeObject<CustomResponse<List<VoteDto>>>(streamResponse));
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         apiResponse?.Data?.Should().BeOfType<List<VoteDto>>();
 
-        #endregion
+        
     }
 
     [Theory]
     [MemberData(nameof(GenerateSubmitVoteData))]
     public async Task SubmitVote_ReturnExpectedResult(int answerId, bool kind, TestResultCode testResultCode)
     {
-        #region [Arrange]
-
+        // [Arrange]
 
         if (testResultCode != TestResultCode.Unauthorized)
         {
             await AuthenticateAsync();
         }
 
-        #endregion
+        
 
-        #region [Act]
+        // [Act]
 
         var response = await _client.PostAsync($"{BaseAddress}/SubmitVote?answerId={answerId}&kind={kind}", null);
 
         if (testResultCode == TestResultCode.Unauthorized)
         {
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
             return;
         }
 
@@ -317,9 +317,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         switch (testResultCode)
         {
@@ -346,8 +346,7 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
                 break;
         }
 
-
-        #endregion
+        
 
 
     }
@@ -357,16 +356,16 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
     public async Task Delete_ReturnExpectedResult(int answerId, TestResultCode testResultCode)
     {
 
-        #region [Arrange]
+        // [Arrange]
 
         if (testResultCode != TestResultCode.Unauthorized)
         {
             await AuthenticateAsync();
         }
 
-        #endregion
+        
 
-        #region [Act]
+        // [Act]
 
         var response = await _client.DeleteAsync($"{BaseAddress}?id={answerId}");
 
@@ -380,9 +379,9 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         switch (testResultCode)
         {
@@ -410,13 +409,13 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         }
 
-        #endregion
+        
     }
 
-    #endregion
+    // <--------------------------------------------------------------------------------|
+    
 
-    #region [Data Method(s)]
-
+    // |------------------------------------|Data Methods|-------------------------------------------->
     public static IEnumerable<object[]> GenerateCreateData()
     {
         return new List<object[]>
@@ -618,6 +617,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             }
         };
     }
-
-    #endregion
+    
+    // <--------------------------------------------------------------------------------|
 }

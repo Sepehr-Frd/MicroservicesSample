@@ -6,13 +6,13 @@ namespace RedditMockup.Model.BaseEntities;
 
 public class BaseEntity
 {
-    #region [Constructor]
+    // [Constructor]
 
     protected BaseEntity() => CreationDate = LastUpdated = DateTime.Now;
 
-    #endregion
+    
 
-    #region [Properties]
+    // [Properties]
 
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,5 +25,5 @@ public class BaseEntity
     [Sieve(CanSort = true)]
     public DateTime LastUpdated { get; set; }
 
-    #endregion
+    
 }

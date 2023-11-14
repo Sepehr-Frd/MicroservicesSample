@@ -12,4 +12,3 @@ public class RedditMockupResponseDto<T>
 
     public HttpStatusCode HttpStatusCode { get; set; }
 }
-

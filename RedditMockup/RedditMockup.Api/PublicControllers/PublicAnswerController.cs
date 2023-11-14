@@ -11,20 +11,20 @@ namespace RedditMockup.Api.PublicControllers;
 [Route("public/answers")]
 public class PublicAnswerController : PublicBaseController<Answer, AnswerDto>
 {
-    #region [Fields]
+    // [Fields]
 
     private readonly PublicAnswerBusiness _publicAnswerBusiness;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
-    public PublicAnswerController(IPublicBaseBusiness<Answer, AnswerDto> publicBaseBusiness) : base(publicBaseBusiness) =>
+    public PublicAnswerController(IPublicBaseBusiness<AnswerDto> publicBaseBusiness) : base(publicBaseBusiness) =>
         _publicAnswerBusiness = (PublicAnswerBusiness)publicBaseBusiness;
 
-    #endregion
+    
 
-    #region [Methods]
+    // [Methods]
 
     [HttpGet]
     [Route("guid/{guid}/votes")]
@@ -37,5 +37,5 @@ public class PublicAnswerController : PublicBaseController<Answer, AnswerDto>
     public async Task<CustomResponse> SubmitVoteAsync([FromRoute] Guid guid, [FromBody] bool kind, CancellationToken cancellationToken) =>
         await _publicAnswerBusiness.SubmitVoteAsync(guid, kind, cancellationToken);
 
-    #endregion
+    
 }

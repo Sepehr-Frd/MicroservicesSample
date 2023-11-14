@@ -5,20 +5,16 @@ namespace RedditMockup.Model.Entities;
 
 public class Profile : BaseEntity
 {
-    #region [Properties]
+    // [Properties]
 
     public string? Bio { get; set; } = string.Empty;
 
     [Sieve(CanFilter = true, CanSort = true)]
     public string? Email { get; set; } = string.Empty;
     
-    #endregion
-
-    #region [Navigation Properties]
+    // [Navigation Properties]
     
     public int UserId { get; set; }
     
     public User? User { get; set; }
-
-    #endregion
 }

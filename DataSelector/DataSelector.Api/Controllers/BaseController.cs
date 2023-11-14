@@ -38,4 +38,3 @@ public class BaseController<T> : ControllerBase
     public async Task<bool> DeleteByIdAsync([FromQuery] string id, CancellationToken cancellationToken) =>
         await _business.DeleteByIdAsync(id, cancellationToken);
 }
-

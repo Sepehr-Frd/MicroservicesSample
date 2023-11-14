@@ -109,8 +109,8 @@ internal static class DependencyInjectionExtension
         services.AddScoped<IBaseBusiness<User, UserDto>, UserBusiness>()
             .AddScoped<IBaseBusiness<Answer, AnswerDto>, AnswerBusiness>()
             .AddScoped<IBaseBusiness<Question, QuestionDto>, QuestionBusiness>()
-            .AddScoped<IPublicBaseBusiness<Answer, AnswerDto>, PublicAnswerBusiness>()
-            .AddScoped<IPublicBaseBusiness<Question, QuestionDto>, PublicQuestionBusiness>()
+            .AddScoped<IPublicBaseBusiness<AnswerDto>, PublicAnswerBusiness>()
+            .AddScoped<IPublicBaseBusiness<QuestionDto>, PublicQuestionBusiness>()
             .AddScoped<AccountBusiness>();
 
     internal static IServiceCollection InjectFluentValidation(this IServiceCollection services) =>

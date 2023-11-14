@@ -37,4 +37,3 @@ public static class DependencyInjectionExtensions
     internal static IServiceCollection InjectMessageBusSubscriber(this IServiceCollection services) =>
         services.AddHostedService<MessageBusSubscriber>();
 }
-

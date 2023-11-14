@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DataSelector.ExternalService.RabbitMQ;
 
-public class MessageBusSubscriber : BackgroundService
+public sealed class MessageBusSubscriber : BackgroundService
 {
 
     private readonly IConfiguration _configuration;
@@ -89,7 +89,7 @@ public class MessageBusSubscriber : BackgroundService
             _channel.Close();
             _connection!.Close();
         }
-
+        
         base.Dispose();
     }
 }

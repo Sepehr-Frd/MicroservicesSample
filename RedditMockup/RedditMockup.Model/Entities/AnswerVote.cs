@@ -5,17 +5,17 @@ namespace RedditMockup.Model.Entities;
 
 public class AnswerVote : BaseEntity
 {
-    #region [Properties]
+    // [Properties]
 
     [Sieve(CanSort = true)]
     public bool Kind { get; set; }
 
-    #endregion
+    
 
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     public int AnswerId { get; set; }
     public Answer? Answer { get; set; }
 
-    #endregion
+    
 }

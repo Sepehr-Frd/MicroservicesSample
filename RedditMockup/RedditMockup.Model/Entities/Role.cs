@@ -4,15 +4,15 @@ namespace RedditMockup.Model.Entities;
 
 public class Role : BaseEntityWithGuid
 {
-    #region [Properties]
+    // [Properties]
 
     public string? Title { get; set; }
 
-    #endregion
+    
 
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     public ICollection<UserRole>? UserRoles { get; set; }
 
-    #endregion
+    
 }

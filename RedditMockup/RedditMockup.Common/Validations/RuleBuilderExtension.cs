@@ -14,7 +14,7 @@ public static class RuleBuilderExtension
         {
             var guidString = validatingGuid.ToString();
 
-            const string guidPattern = @"^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$";
+            const string guidPattern = "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$";
 
             return Regex.IsMatch(guidString, guidPattern);
         }

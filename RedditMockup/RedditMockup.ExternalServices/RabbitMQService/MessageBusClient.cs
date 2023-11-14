@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace RedditMockup.ExternalService.RabbitMQService;
 
-public class MessageBusClient : IMessageBusClient
+public sealed class MessageBusClient : IMessageBusClient
 {
     private readonly ILogger _logger;
 

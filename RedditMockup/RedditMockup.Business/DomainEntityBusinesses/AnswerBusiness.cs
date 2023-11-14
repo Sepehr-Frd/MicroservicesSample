@@ -10,43 +10,28 @@ using System.Net;
 
 namespace RedditMockup.Business.DomainEntityBusinesses;
 
-public class AnswerBusiness : BaseBusiness<Answer, AnswerDto>
+public class AnswerBusiness(IUnitOfWork unitOfWork, IMapper mapper) : BaseBusiness<Answer, AnswerDto>(unitOfWork, unitOfWork.AnswerRepository!, mapper)
 {
-    #region [Fields]
+    // [Fields]
 
-    private readonly AnswerRepository _answerRepository;
+    private readonly AnswerRepository _answerRepository = unitOfWork.AnswerRepository!;
 
-    private readonly IUnitOfWork _unitOfWork;
-
-    private readonly IMapper _mapper;
-
-    #endregion
-
-    #region [Constructor]
-
-    public AnswerBusiness(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, unitOfWork.AnswerRepository!, mapper)
-    {
-        _answerRepository = unitOfWork.AnswerRepository!;
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
-
-    #endregion
-
-    #region [Methods]
+    
+    
+    // [Methods]
 
     public override async Task<Answer?> CreateAsync(AnswerDto answerDto, CancellationToken cancellationToken = default)
     {
-        var answer = _mapper.Map<Answer>(answerDto);
+        var answer = mapper.Map<Answer>(answerDto);
 
-        var user = await _unitOfWork.UserRepository!.GetByGuidAsync(answerDto.UserGuid, null, cancellationToken);
+        var user = await unitOfWork.UserRepository!.GetByGuidAsync(answerDto.UserGuid, null, cancellationToken);
 
         if (user is null)
         {
             return null;
         }
 
-        var question = await _unitOfWork.QuestionRepository!.GetByGuidAsync(answerDto.QuestionGuid, null, cancellationToken);
+        var question = await unitOfWork.QuestionRepository!.GetByGuidAsync(answerDto.QuestionGuid, null, cancellationToken);
 
         if (question is null)
         {
@@ -110,7 +95,7 @@ public class AnswerBusiness : BaseBusiness<Answer, AnswerDto>
 
         await _answerRepository.SubmitVoteAsync(vote, cancellationToken);
 
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await unitOfWork.CommitAsync(cancellationToken);
 
         return CustomResponse.CreateSuccessfulResponse($"{(kind ? "Up" : "Down")}vote submitted");
     }
@@ -131,5 +116,5 @@ public class AnswerBusiness : BaseBusiness<Answer, AnswerDto>
 
     }
 
-    #endregion
+    
 }

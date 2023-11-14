@@ -5,7 +5,7 @@ namespace RedditMockup.Model.Entities;
 
 public class User : BaseEntityWithGuid
 {
-    #region [Properties]
+    // [Properties]
 
     [Sieve(CanSort = true, CanFilter = true)]
     public string? Username { get; set; }
@@ -14,9 +14,9 @@ public class User : BaseEntityWithGuid
 
     public int Score { get; set; }
 
-    #endregion
+    
 
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     [Sieve(CanFilter = true)]
     public int PersonId { get; set; }
@@ -33,5 +33,5 @@ public class User : BaseEntityWithGuid
 
     public ICollection<Bookmark>? Bookmarks { get; set; }
 
-    #endregion
+    
 }

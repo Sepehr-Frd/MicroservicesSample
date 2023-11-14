@@ -48,7 +48,7 @@ public class EventProcessor : IEventProcessor
         using var scope = _serviceScopeFactory.CreateScope();
 
         var repository = scope.ServiceProvider.GetRequiredService<IBaseRepository<QuestionDocument>>();
-        
+
         var questionPublishedDto = JsonSerializer.Deserialize<QuestionPublishedDto>(questionPublishedMessage);
 
         try
@@ -66,4 +66,3 @@ public class EventProcessor : IEventProcessor
 
     }
 }
-

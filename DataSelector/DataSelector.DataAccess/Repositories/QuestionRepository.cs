@@ -9,4 +9,3 @@ public class QuestionRepository : BaseRepository<QuestionDocument>
     {
     }
 }
-

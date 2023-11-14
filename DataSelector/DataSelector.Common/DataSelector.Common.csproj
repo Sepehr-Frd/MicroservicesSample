@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="12.0.1"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Dtos\" />
-    <None Remove="MappingProfiles\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-    <Folder Include="Profiles\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DataSelector.Model\DataSelector.Model.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Dtos\"/>
+        <None Remove="MappingProfiles\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Dtos\"/>
+        <Folder Include="Profiles\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DataSelector.Model\DataSelector.Model.csproj"/>
+    </ItemGroup>
 </Project>

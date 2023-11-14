@@ -5,18 +5,18 @@ namespace RedditMockup.Model.Entities;
 
 public class QuestionVote : BaseEntity
 {
-    #region [Properties]
+    // [Properties]
 
     [Sieve(CanSort = true)]
     public bool Kind { get; set; }
 
-    #endregion
+    
 
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     public int QuestionId { get; set; }
 
     public Question? Question { get; set; }
 
-    #endregion
+    
 }

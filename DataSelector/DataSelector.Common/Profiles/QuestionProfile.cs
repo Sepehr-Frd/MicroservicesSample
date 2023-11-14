@@ -19,4 +19,3 @@ public class QuestionProfile : Profile
 
 
 }
-

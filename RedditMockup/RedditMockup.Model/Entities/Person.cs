@@ -5,7 +5,7 @@ namespace RedditMockup.Model.Entities;
 
 public class Person : BaseEntityWithGuid
 {
-    #region [Properties]
+    // [Properties]
 
     [Sieve(CanFilter = true, CanSort = true)]
     public string? FirstName { get; set; }
@@ -15,11 +15,7 @@ public class Person : BaseEntityWithGuid
 
     public string FullName => FirstName + " " + LastName;
 
-    #endregion
-
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     public User? User { get; set; }
-
-    #endregion
 }

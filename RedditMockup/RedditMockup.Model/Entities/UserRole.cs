@@ -5,7 +5,7 @@ namespace RedditMockup.Model.Entities;
 
 public class UserRole : BaseEntity
 {
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     [Sieve(CanFilter = true, CanSort = true)]
     public int UserId { get; set; }
@@ -17,5 +17,5 @@ public class UserRole : BaseEntity
 
     public Role? Role { get; set; }
 
-    #endregion
+    
 }

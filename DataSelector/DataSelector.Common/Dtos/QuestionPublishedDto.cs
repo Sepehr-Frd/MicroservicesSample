@@ -8,4 +8,3 @@ public class QuestionPublishedDto
 
     public string? Event { get; set; }
 }
-

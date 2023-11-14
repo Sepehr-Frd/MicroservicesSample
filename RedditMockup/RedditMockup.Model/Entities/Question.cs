@@ -5,7 +5,7 @@ namespace RedditMockup.Model.Entities;
 
 public class Question : BaseEntityWithGuid
 {
-    #region [Properties]
+    // [Properties]
 
     [Sieve(CanFilter = true, CanSort = true)]
     public string? Title { get; set; }
@@ -13,9 +13,9 @@ public class Question : BaseEntityWithGuid
     [Sieve(CanFilter = true)]
     public string? Description { get; set; }
 
-    #endregion
+    
 
-    #region [Navigation Properties]
+    // [Navigation Properties]
 
     public ICollection<Answer>? Answers { get; set; }
 
@@ -28,5 +28,5 @@ public class Question : BaseEntityWithGuid
     
     public User? User { get; set; }
 
-    #endregion
+    
 }

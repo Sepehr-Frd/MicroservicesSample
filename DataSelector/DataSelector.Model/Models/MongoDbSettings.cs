@@ -8,4 +8,3 @@ public class MongoDbSettings
 
     public string CollectionName { get; set; } = null!;
 }
-

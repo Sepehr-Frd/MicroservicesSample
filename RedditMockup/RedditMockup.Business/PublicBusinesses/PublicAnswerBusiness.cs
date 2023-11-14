@@ -9,15 +9,15 @@ namespace RedditMockup.Business.PublicBusinesses;
 
 public class PublicAnswerBusiness : PublicBaseBusiness<Answer, AnswerDto>
 {
-    #region [Fields]
+    // [Fields]
 
     private readonly IMapper _mapper;
 
     private readonly AnswerBusiness _answerBusiness;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
     public PublicAnswerBusiness(IBaseBusiness<Answer, AnswerDto> answerBusiness, IMapper mapper) : base(answerBusiness, mapper)
     {
@@ -25,9 +25,9 @@ public class PublicAnswerBusiness : PublicBaseBusiness<Answer, AnswerDto>
         _answerBusiness = (AnswerBusiness)answerBusiness;
     }
 
-    #endregion
+    
 
-    #region [Methods]
+    // [Methods]
 
     public async Task<CustomResponse<List<VoteDto>>> GetVotesByAnswerGuidAsync(Guid answerGuid, CancellationToken cancellationToken = default)
     {
@@ -46,5 +46,5 @@ public class PublicAnswerBusiness : PublicBaseBusiness<Answer, AnswerDto>
     public async Task<CustomResponse> SubmitVoteAsync(Guid answerGuid, bool kind, CancellationToken cancellationToken = default) =>
         await _answerBusiness.SubmitVoteAsync(answerGuid, kind, cancellationToken);
 
-    #endregion
+    
 }

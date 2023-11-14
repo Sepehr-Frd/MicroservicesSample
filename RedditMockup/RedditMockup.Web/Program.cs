@@ -6,7 +6,7 @@ using Serilog;
 using Serilog.Settings.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
-#region [macOS Configuration for gRPC over HTTP 2.0 Without TLS]
+// macOS Configuration for gRPC over HTTP 2.0 Without TLS --------------------------->
 
 /*
  builder.WebHost.ConfigureKestrel(options =>
@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 });
 */
 
-#endregion
+// <---------------------------------------------------------------------------------
 
 builder.Configuration.AddEnvironmentVariables();
 

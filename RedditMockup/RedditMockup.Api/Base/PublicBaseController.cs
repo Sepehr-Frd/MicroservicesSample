@@ -13,20 +13,20 @@ public class PublicBaseController<TEntity, TDto> : ControllerBase
     where TDto : BaseDto
     where TEntity : BaseEntityWithGuid
 {
-    #region [Fields]
+    // [Fields]
 
-    private readonly IPublicBaseBusiness<TEntity, TDto> _publicBaseBusiness;
+    private readonly IPublicBaseBusiness<TDto> _publicBaseBusiness;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
-    public PublicBaseController(IPublicBaseBusiness<TEntity, TDto> publicBaseBusiness) =>
+    public PublicBaseController(IPublicBaseBusiness<TDto> publicBaseBusiness) =>
         _publicBaseBusiness = publicBaseBusiness;
 
-    #endregion
+    
 
-    #region [Methods]
+    // [Methods]
 
     [Authorize]
     [HttpPost]
@@ -58,5 +58,5 @@ public class PublicBaseController<TEntity, TDto> : ControllerBase
     public void Options() =>
         Response.Headers.Add("Allow", "POST,PUT,DELETE,GET");
 
-    #endregion
+    
 }

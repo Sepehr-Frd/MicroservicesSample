@@ -12,24 +12,24 @@ namespace RedditMockup.Api.PublicControllers;
 [Route("public/questions")]
 public class PublicQuestionController : PublicBaseController<Question, QuestionDto>
 {
-    #region [Fields]
+    // [Fields]
 
     private readonly PublicQuestionBusiness _publicQuestionBusiness;
 
     private readonly IMessageBusClient _messageBusClient;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
-    public PublicQuestionController(IPublicBaseBusiness<Question, QuestionDto> questionDtoBaseBusiness, IMessageBusClient messageBusClient) : base(questionDtoBaseBusiness)
+    public PublicQuestionController(IPublicBaseBusiness<QuestionDto> questionDtoBaseBusiness, IMessageBusClient messageBusClient) : base(questionDtoBaseBusiness)
     {
         _publicQuestionBusiness = (PublicQuestionBusiness)questionDtoBaseBusiness;
 
         _messageBusClient = messageBusClient;
     }
 
-    #endregion
+    
 
     [HttpGet]
     [Route("guid/{guid}/answers")]
@@ -46,7 +46,7 @@ public class PublicQuestionController : PublicBaseController<Question, QuestionD
     [Route("guid/{guid}/votes")]
     public async Task<CustomResponse> SubmitVoteAsync([FromRoute] Guid guid, [FromBody] bool kind, CancellationToken cancellationToken) =>
         await _publicQuestionBusiness.SubmitVoteAsync(guid, kind, cancellationToken);
-    
+
     // ------------------------------------------------------------------------>
 
     [HttpPost]
@@ -65,6 +65,6 @@ public class PublicQuestionController : PublicBaseController<Question, QuestionD
         _messageBusClient.PublishNewQuestion(questionPublishedDto);
 
     }
-    
+
     // <-----------------------------------------------------------------------
 }

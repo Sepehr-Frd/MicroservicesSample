@@ -14,7 +14,7 @@ namespace RedditMockup.IntegrationTest;
 public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program>>
 {
 
-    #region [Field(s)]
+    // [Field(s)]
 
     private const string BaseAddress = "/api/Account";
 
@@ -22,24 +22,24 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
     private readonly HttpClient _client;
 
-    #endregion
+    
 
-    #region [Constructor]
+    // [Constructor]
 
     public AccountControllerTest(WebApplicationFactory<Program> factory) =>
         _client = factory.WithWebHostBuilder(builder =>
                 builder.UseEnvironment("Testing"))
             .CreateClient();
 
-    #endregion
+    
 
-    #region [Theory Method(s)]
+    // [Theory Method(s)]
 
     [Theory]
     [MemberData(nameof(GenerateLoginData))]
     public async Task Login_ReturnExpectedResult(LoginDto loginDto, bool expected)
     {
-        #region [Arrange]
+        // [Arrange]
 
         var client = new RestClient(_client);
 
@@ -50,34 +50,34 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         request.AddJsonBody(loginDto);
 
-        #endregion
+        
 
-        #region [Act]
+        // [Act]
 
         var response = await client.ExecutePostAsync<CustomResponse>(request);
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         response.Data?.IsSuccess.Should().Be(expected);
 
-        #endregion
+        
     }
 
     [Theory]
     [MemberData(nameof(GenerateIntegrationData))]
     public async Task LoginGetAllLogout_ReturnExpectedResult(LoginDto loginDto, TestResultCode expected)
     {
-        #region [Arrange]
+        // [Arrange]
 
         var client = new RestClient(_client);
 
-        #endregion
+        
 
-        #region [Act]
+        // [Act]
 
-        #region [Login]
+        // [Login]
 
         var loginRequest = new RestRequest($"{BaseAddress}/Login")
         {
@@ -88,9 +88,9 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var loginResponse = await client.ExecutePostAsync<CustomResponse>(loginRequest);
 
-        #endregion
+        
 
-        #region [GetAll]
+        // [GetAll]
 
         var getAllRequest = new RestRequest("/api/User")
         {
@@ -99,9 +99,9 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var getAllResponse = await client.ExecuteGetAsync<CustomResponse>(getAllRequest);
 
-        #endregion
+        
 
-        #region [Logout]
+        // [Logout]
 
         var logoutRequest = new RestRequest($"{BaseAddress}/Logout")
         {
@@ -110,11 +110,11 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var logoutResponse = await client.ExecutePostAsync<CustomResponse>(logoutRequest);
 
-        #endregion
+        
 
-        #endregion
+        
 
-        #region [Assert]
+        // [Assert]
 
         switch (expected)
         {
@@ -153,12 +153,12 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
                 break;
         }
 
-        #endregion
+        
     }
 
-    #endregion
+    
 
-    #region [Data Method(s)]
+    // [Data Method(s)]
 
     public static IEnumerable<object[]> GenerateLoginData()
     {
@@ -260,7 +260,7 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
         };
     }
 
-    #endregion
+    
 
     public enum TestResultCode
     {

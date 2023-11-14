@@ -6,4 +6,3 @@ public class QuestionDocument : BaseDocument
 
     public string? Description { get; set; }
 }
-

@@ -7,17 +7,17 @@ using System.Net;
 
 namespace RedditMockup.Business.Base;
 
-public class PublicBaseBusiness<TEntity, TDto> : IPublicBaseBusiness<TEntity, TDto>
+public class PublicBaseBusiness<TEntity, TDto> : IPublicBaseBusiness<TDto>
     where TDto : BaseDto
     where TEntity : BaseEntityWithGuid
 {
-    #region [Fields]
+    // [Fields]
 
     private readonly IMapper _mapper;
 
     private readonly IBaseBusiness<TEntity, TDto> _baseBusiness;
 
-    #endregion
+    
 
     protected PublicBaseBusiness(IBaseBusiness<TEntity, TDto> baseBusiness, IMapper mapper)
     {

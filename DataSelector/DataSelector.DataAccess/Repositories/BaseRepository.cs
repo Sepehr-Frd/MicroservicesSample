@@ -9,7 +9,7 @@ public class BaseRepository<T> : IBaseRepository<T>
 {
     private readonly IMongoCollection<T> _mongoDbCollection;
 
-    public BaseRepository(IOptions<MongoDbSettings> databaseSettings)
+    protected BaseRepository(IOptions<MongoDbSettings> databaseSettings)
     {
         var mongoClient = new MongoClient(databaseSettings.Value.ConnectionString);
 

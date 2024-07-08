@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using RedditMockup.Common.Dtos;
-using System;
 using Xunit;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -68,7 +68,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
     // <--------------------------------------------------------------------------------|
 
-
     // |------------------------------------|Theory Methods|-------------------------------------------->
     [Theory]
     [MemberData(nameof(GenerateCreateData))]
@@ -80,7 +79,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var stringContent = new StringContent(serializedLoginDto, Encoding.UTF8, "application/json");
 
-        
 
         // [Act]
 
@@ -98,36 +96,24 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        
-
         // [Assert]
 
-        switch (testResultCode)
+        if (testResultCode == TestResultCode.Ok)
         {
-            case TestResultCode.Ok:
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeTrue();
-
-                break;
-
-            case TestResultCode.NotFound:
-
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeFalse();
-
-                break;
-
-            default:
-
-                Assert.Null("Error");
-
-                break;
+            apiResponse?.IsSuccess.Should().BeTrue();
         }
+        else if (testResultCode == TestResultCode.NotFound)
+        {
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        
+            apiResponse?.IsSuccess.Should().BeFalse();
+        }
+        else
+        {
+            Assert.Null("Error");
+        }
     }
 
     [Fact]
@@ -142,15 +128,12 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         var apiResponse = await Task.Factory.StartNew(() =>
             JsonConvert.DeserializeObject<CustomResponse<List<AnswerDto>>>(streamResponse));
 
-        
 
         // [Assert]
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         apiResponse?.Data?.Should().BeOfType<List<AnswerDto>>();
-
-        
     }
 
     [Theory]
@@ -163,7 +146,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
             await AuthenticateAsync();
 
-            
 
             // [Act]
 
@@ -173,7 +155,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
             var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-            
 
             // [Assert]
 
@@ -183,8 +164,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
                 apiResponse?.IsSuccess.Should().BeFalse();
             else
                 apiResponse?.IsSuccess.Should().BeTrue();
-
-            
         }
         else
         {
@@ -192,13 +171,10 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
             var response = await _client.GetAsync(BaseAddress + "/id" + $"?id={id}");
 
-            
 
             // [Assert]
 
             response.StatusCode.Should().Be(httpStatusCode);
-
-            
         }
     }
 
@@ -217,7 +193,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             await AuthenticateAsync();
         }
 
-        
 
         // [Act]
 
@@ -233,37 +208,22 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        
-
         // [Assert]
 
-        switch (testResultCode)
+        if (testResultCode == TestResultCode.Ok)
         {
-            case TestResultCode.Ok:
-
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeTrue();
-
-                break;
-
-            case TestResultCode.NotFound:
-
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeFalse();
-
-                break;
-
-            default:
-
-                Assert.Null("Error");
-
-                break;
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            apiResponse?.IsSuccess.Should().BeTrue();
         }
-
-        
-
+        else if (testResultCode == TestResultCode.NotFound)
+        {
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            apiResponse?.IsSuccess.Should().BeFalse();
+        }
+        else
+        {
+            Assert.Null("Error");
+        }
     }
 
     [Fact]
@@ -278,15 +238,12 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
         var apiResponse = await Task.Factory.StartNew(() =>
             JsonConvert.DeserializeObject<CustomResponse<List<VoteDto>>>(streamResponse));
 
-        
 
         // [Assert]
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         apiResponse?.Data?.Should().BeOfType<List<VoteDto>>();
-
-        
     }
 
     [Theory]
@@ -300,7 +257,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             await AuthenticateAsync();
         }
 
-        
 
         // [Act]
 
@@ -317,45 +273,31 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        
 
         // [Assert]
 
-        switch (testResultCode)
+        if (testResultCode == TestResultCode.Ok)
         {
-            case TestResultCode.Ok:
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeTrue();
-
-                break;
-
-            case TestResultCode.NotFound:
-
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeFalse();
-
-                break;
-
-            default:
-
-                Assert.Null("Error");
-
-                break;
+            apiResponse?.IsSuccess.Should().BeTrue();
         }
+        else if (testResultCode == TestResultCode.NotFound)
+        {
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        
-
-
+            apiResponse?.IsSuccess.Should().BeFalse();
+        }
+        else
+        {
+            Assert.Null("Error");
+        }
     }
 
     [Theory]
     [MemberData(nameof(GenerateDeleteData))]
     public async Task Delete_ReturnExpectedResult(int answerId, TestResultCode testResultCode)
     {
-
         // [Arrange]
 
         if (testResultCode != TestResultCode.Unauthorized)
@@ -363,7 +305,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             await AuthenticateAsync();
         }
 
-        
 
         // [Act]
 
@@ -379,41 +320,28 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
         var apiResponse = await JsonSerializer.DeserializeAsync<CustomResponse>(streamResponse);
 
-        
 
         // [Assert]
 
-        switch (testResultCode)
+        if (testResultCode == TestResultCode.Ok)
         {
-            case TestResultCode.Ok:
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeTrue();
-
-                break;
-
-            case TestResultCode.NotFound:
-
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                apiResponse?.IsSuccess.Should().BeFalse();
-
-                break;
-
-            default:
-
-                Assert.Null("Error");
-
-                break;
-
+            apiResponse?.IsSuccess.Should().BeTrue();
         }
+        else if (testResultCode == TestResultCode.NotFound)
+        {
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        
+            apiResponse?.IsSuccess.Should().BeFalse();
+        }
+        else
+        {
+            Assert.Null("Error");
+        }
     }
 
     // <--------------------------------------------------------------------------------|
-    
 
     // |------------------------------------|Data Methods|-------------------------------------------->
     public static IEnumerable<object[]> GenerateCreateData()
@@ -515,9 +443,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
 
     public static IEnumerable<object[]> GenerateUpdateData()
     {
-
-
-
         return new List<object[]>
         {
             new object[]
@@ -617,6 +542,6 @@ public class AnswerControllerTest : IClassFixture<WebApplicationFactory<Program>
             }
         };
     }
-    
+
     // <--------------------------------------------------------------------------------|
 }

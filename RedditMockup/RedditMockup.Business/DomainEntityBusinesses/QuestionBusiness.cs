@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RedditMockup.Business.Base;
@@ -7,7 +8,6 @@ using RedditMockup.DataAccess.Contracts;
 using RedditMockup.DataAccess.Repositories;
 using RedditMockup.Model.Entities;
 using Sieve.Models;
-using System.Net;
 
 namespace RedditMockup.Business.DomainEntityBusinesses;
 
@@ -19,30 +19,22 @@ public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
 
     private readonly IUnitOfWork _unitOfWork;
 
-    private readonly IMapper _mapper;
-
-    
-
     // [Constructor]
 
-    public QuestionBusiness(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, unitOfWork.QuestionRepository!, mapper)
+    public QuestionBusiness(IUnitOfWork unitOfWork) : base(unitOfWork, unitOfWork.QuestionRepository!)
     {
-        _questionRepository = unitOfWork.QuestionRepository!;
+        _questionRepository = (QuestionRepository)unitOfWork.QuestionRepository!;
 
         _unitOfWork = unitOfWork;
-
-        _mapper = mapper;
     }
-
-    
 
     // [Methods]
 
-    public override async Task<Question?> CreateAsync(QuestionDto answerDto, CancellationToken cancellationToken = default)
+    public async override Task<Question?> CreateAsync(QuestionDto userDto, CancellationToken cancellationToken = default)
     {
-        var question = _mapper.Map<Question>(answerDto);
+        var question = userDto.Adapt<Question>();
 
-        var user = await _unitOfWork.UserRepository!.GetByGuidAsync(answerDto.UserGuid, null, cancellationToken);
+        var user = await _unitOfWork.UserRepository!.GetByGuidAsync(userDto.UserGuid, null, cancellationToken);
 
         if (user is null)
         {
@@ -54,17 +46,17 @@ public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
         return await CreateAsync(question, cancellationToken);
     }
 
-    public override async Task<Question?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+    public async override Task<Question?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         await _questionRepository.GetByIdAsync(id,
             questions => questions.Include(question => question.User),
             cancellationToken);
 
-    public override async Task<Question?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default) =>
+    public async override Task<Question?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default) =>
         await _questionRepository.GetByGuidAsync(guid,
             questions => questions.Include(question => question.User),
             cancellationToken);
 
-    public override async Task<List<Question>?> GetAllAsync(SieveModel sieveModel, CancellationToken cancellationToken = default) =>
+    public async override Task<List<Question>?> GetAllAsync(SieveModel sieveModel, CancellationToken cancellationToken = default) =>
         await _questionRepository.GetAllAsync(sieveModel,
             questions => questions.Include(question => question.User),
             cancellationToken);
@@ -150,5 +142,4 @@ public class QuestionBusiness : BaseBusiness<Question, QuestionDto>
         return CustomResponse.CreateSuccessfulResponse($"{(kind ? "Up" : "Down")}vote submitted");
     }
 
-    
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RedditMockup.Business.Contracts;
 using RedditMockup.Common.Constants;
@@ -29,22 +30,22 @@ public class BaseController<TEntity, TDto> : ControllerBase
         await _business.GetAllAsync(sieveModel, cancellationToken);
 
     [HttpGet]
-    [Route("id/{id}")]
+    [Route("id/{id:int}")]
     public async Task<TEntity?> GetByIdAsync([FromRoute] int id, CancellationToken cancellationToken) =>
         await _business.GetByIdAsync(id, cancellationToken);
 
     [HttpGet]
-    [Route("guid/{guid}")]
+    [Route("guid/{guid:guid}")]
     public async Task<TEntity?> GetByGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _business.GetByGuidAsync(guid, cancellationToken);
 
     [HttpDelete]
-    [Route("id/{id}")]
+    [Route("id/{id:int}")]
     public async Task<TEntity?> DeleteByIdAsync([FromRoute] int id, CancellationToken cancellationToken) =>
         await _business.DeleteByIdAsync(id, cancellationToken);
 
     [HttpDelete]
-    [Route("guid/{guid}")]
+    [Route("guid/{guid:guid}")]
     public async Task<TEntity?> DeleteByGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _business.DeleteByGuidAsync(guid, cancellationToken);
 
@@ -55,5 +56,5 @@ public class BaseController<TEntity, TDto> : ControllerBase
 
     [HttpOptions]
     public void Options() =>
-        Response.Headers.Add("Allow", "POST,PUT,DELETE,GET");
+        Response.Headers.Append("Allow", "POST,PUT,DELETE,GET");
 }

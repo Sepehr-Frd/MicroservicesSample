@@ -4,13 +4,13 @@ namespace RedditMockup.Common.Dtos;
 
 public class CustomResponse<T>
 {
-    public T? Data { get; init; }
+    public T? Data { get; private init; }
 
-    public bool IsSuccess { get; init; }
+    public bool IsSuccess { get; private init; }
 
-    public string? Message { get; init; }
+    public string? Message { get; private init; }
 
-    public HttpStatusCode HttpStatusCode { get; init; }
+    public HttpStatusCode HttpStatusCode { get; private init; }
 
     public static CustomResponse<T> CreateUnsuccessfulResponse(HttpStatusCode httpStatusCode, string? message = null) =>
         new()
@@ -32,11 +32,11 @@ public class CustomResponse<T>
 
 public class CustomResponse
 {
-    public bool IsSuccess { get; set; }
+    public bool IsSuccess { get; init; }
 
-    public string? Message { get; set; }
+    public string? Message { get; init; }
 
-    public HttpStatusCode HttpStatusCode { get; set; }
+    public HttpStatusCode HttpStatusCode { get; init; }
 
     public static CustomResponse CreateUnsuccessfulResponse(HttpStatusCode httpStatusCode, string? message = null) =>
         new()

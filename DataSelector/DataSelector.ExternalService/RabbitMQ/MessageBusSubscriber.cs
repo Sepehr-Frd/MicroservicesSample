@@ -1,9 +1,9 @@
-﻿using DataSelector.ExternalService.RabbitMQ.EventProcessing;
+﻿using System.Text;
+using DataSelector.ExternalService.RabbitMQ.EventProcessing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Text;
 
 namespace DataSelector.ExternalService.RabbitMQ;
 
@@ -69,7 +69,6 @@ public sealed class MessageBusSubscriber : BackgroundService
             var notificationMessage = Encoding.UTF8.GetString(body.ToArray());
 
             await _eventProcessor.ProcessEventAsync(notificationMessage, stoppingToken);
-
         };
 
         _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
@@ -89,7 +88,7 @@ public sealed class MessageBusSubscriber : BackgroundService
             _channel.Close();
             _connection!.Close();
         }
-        
+
         base.Dispose();
     }
 }

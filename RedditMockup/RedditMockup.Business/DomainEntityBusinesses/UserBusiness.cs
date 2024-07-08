@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using RedditMockup.Business.Base;
 using RedditMockup.Common.Dtos;
@@ -17,60 +17,51 @@ public class UserBusiness : BaseBusiness<User, UserDto>
 
     private readonly IUnitOfWork _unitOfWork;
 
-    private readonly IMapper _mapper;
-
-    
-
     // [Constructor]
 
-    public UserBusiness(IUnitOfWork unitOfWork, IMapper mapper) :
-        base(unitOfWork, unitOfWork.UserRepository!, mapper)
+    public UserBusiness(IUnitOfWork unitOfWork) :
+        base(unitOfWork, unitOfWork.UserRepository!)
     {
-        _userRepository = unitOfWork.UserRepository!;
+        _userRepository = (UserRepository)unitOfWork.UserRepository!;
 
         _unitOfWork = unitOfWork;
-
-        _mapper = mapper;
     }
-
-    
 
     // [Methods]
 
-    public override async Task<User?> CreateAsync(UserDto answerDto, CancellationToken cancellationToken = default)
+    public async override Task<User?> CreateAsync(UserDto userDto, CancellationToken cancellationToken = default)
     {
         var person = new Person
         {
-            FirstName = answerDto.FirstName,
-            LastName = answerDto.LastName
+            FirstName = userDto.FirstName,
+            LastName = userDto.LastName
         };
 
         var createdPerson = await _unitOfWork.PersonRepository!.CreateAsync(person, cancellationToken);
 
-        var user = _mapper.Map<User>(answerDto);
+        var user = userDto.Adapt<User>();
 
         user.PersonId = createdPerson.Id;
 
         return await CreateAsync(user, cancellationToken);
     }
 
-    public override async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+    public async override Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         await _userRepository.GetByIdAsync(id,
             users => users.Include(user => user.Person)
                 .Include(user => user.Profile),
             cancellationToken);
 
-    public override async Task<User?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default) =>
+    public async override Task<User?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default) =>
         await _userRepository.GetByGuidAsync(guid,
             users => users.Include(user => user.Person)
                 .Include(user => user.Profile),
             cancellationToken);
 
-    public override async Task<List<User>?> GetAllAsync(SieveModel sieveModel, CancellationToken cancellationToken = default) =>
+    public async override Task<List<User>?> GetAllAsync(SieveModel sieveModel, CancellationToken cancellationToken = default) =>
         await _userRepository.GetAllAsync(sieveModel,
             users => users.Include(user => user.Person)
                 .Include(user => user.Profile),
             cancellationToken);
 
-    
 }

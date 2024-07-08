@@ -9,19 +9,15 @@ public class QuestionController : BaseController<QuestionDocument>
 {
     private readonly QuestionBusiness _questionBusiness;
 
-    private readonly RedditMockupRestService _redditMockupService;
-
-    public QuestionController(QuestionBusiness questionBusiness, RedditMockupRestService redditMockupService) : base(questionBusiness)
+    public QuestionController(QuestionBusiness questionBusiness) : base(questionBusiness)
     {
         _questionBusiness = questionBusiness;
-
-        _redditMockupService = redditMockupService;
     }
 
     [HttpGet]
     public async Task<IActionResult> ImportQuestionsAsync(CancellationToken cancellationToken)
     {
-        var questions = await _redditMockupService.GetQuestionsAsync(cancellationToken);
+        var questions = await RedditMockupRestService.GetQuestionsAsync(cancellationToken);
 
         if (questions is null || questions.Count == 0)
         {

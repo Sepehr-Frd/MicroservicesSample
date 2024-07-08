@@ -18,19 +18,17 @@ public class QuestionController : BaseController<Question, QuestionDto>
     }
 
     [HttpGet]
-    [Route("{guid}/answers")]
+    [Route("{guid:guid}/answers")]
     public async Task<CustomResponse<List<Answer>>> GetAnswersByQuestionGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _business.GetAnswersByQuestionGuidAsync(guid, cancellationToken);
 
-
     [HttpGet]
-    [Route("{guid}/votes")]
+    [Route("{guid:guid}/votes")]
     public async Task<CustomResponse<List<QuestionVote>>> GetVotesByQuestionGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _business.GetVotesByQuestionGuidAsync(guid, cancellationToken);
 
-
     [HttpPost]
-    [Route("{guid}/votes")]
+    [Route("{guid:guid}/votes")]
     public async Task<CustomResponse> SubmitVoteAsync([FromRoute] Guid guid, [FromBody] bool kind, CancellationToken cancellationToken) =>
         await _business.SubmitVoteAsync(guid, kind, cancellationToken);
 }

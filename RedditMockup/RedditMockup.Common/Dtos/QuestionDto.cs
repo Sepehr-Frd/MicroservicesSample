@@ -2,9 +2,9 @@
 
 public class QuestionDto : BaseDto
 {
-    public Guid UserGuid { get; set; }
+    public Guid UserGuid { get; init; }
 
-    public string? Title { get; set; }
+    public string? Title { get; init; }
 
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 }

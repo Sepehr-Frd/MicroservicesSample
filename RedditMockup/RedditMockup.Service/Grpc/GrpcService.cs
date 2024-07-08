@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Grpc.Core;
+﻿using Grpc.Core;
+using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using RedditMockup.DataAccess.Contracts;
 using RedditMockup.DataAccess.Repositories;
@@ -11,18 +11,14 @@ public class GrpcService : RedditMockupGrpc.RedditMockupGrpcBase
 {
     private readonly QuestionRepository? _questionRepository;
 
-    private readonly IMapper _mapper;
-
-    public GrpcService(IServiceScopeFactory serviceScopeFactory, IMapper mapper)
+    public GrpcService(IServiceScopeFactory serviceScopeFactory)
     {
-        _mapper = mapper;
-
         var unitOfWork = serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-        _questionRepository = unitOfWork.QuestionRepository;
+        _questionRepository = (QuestionRepository)unitOfWork.QuestionRepository!;
     }
 
-    public override async Task<GrpcResponse?> GetAllQuestions(GetAllRequest request, ServerCallContext context)
+    public async override Task<GrpcResponse?> GetAllQuestions(GetAllRequest request, ServerCallContext context)
     {
         if (_questionRepository is null)
         {
@@ -33,7 +29,7 @@ public class GrpcService : RedditMockupGrpc.RedditMockupGrpcBase
 
         var questions = await _questionRepository.GetAllAsync(new SieveModel());
 
-        var questionDtos = _mapper.Map<List<GrpcQuestionModel>>(questions);
+        var questionDtos = questions.Adapt<List<GrpcQuestionModel>>();
 
         response.Question.AddRange(questionDtos);
 

@@ -13,4 +13,7 @@
         <ProjectReference Include="..\RedditMockup.Common\RedditMockup.Common.csproj" />
         <ProjectReference Include="..\RedditMockup.Business\RedditMockup.Business.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="7.4.0" />
+    </ItemGroup>
 </Project>

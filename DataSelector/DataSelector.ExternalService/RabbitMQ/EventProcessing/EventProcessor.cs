@@ -2,7 +2,7 @@
 using DataSelector.Common.Dtos;
 using DataSelector.DataAccess;
 using DataSelector.Model.Models;
-using AutoMapper;
+using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataSelector.ExternalService.RabbitMQ.EventProcessing;
@@ -11,13 +11,9 @@ public class EventProcessor : IEventProcessor
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    private readonly IMapper _mapper;
-
-    public EventProcessor(IServiceScopeFactory serviceScopeFactory, IMapper mapper)
+    public EventProcessor(IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;
-
-        _mapper = mapper;
     }
 
     public async Task ProcessEventAsync(string message, CancellationToken cancellationToken = default)
@@ -28,7 +24,6 @@ public class EventProcessor : IEventProcessor
         {
             await AddQuestionAsync(message, cancellationToken);
         }
-
     }
 
     private static EventType DetermineEventType(string notificationMessage)
@@ -40,7 +35,6 @@ public class EventProcessor : IEventProcessor
             "Question_Published" => EventType.QuestionPublished,
             _ => EventType.Undetermined
         };
-
     }
 
     private async Task AddQuestionAsync(string questionPublishedMessage, CancellationToken cancellationToken)
@@ -53,16 +47,12 @@ public class EventProcessor : IEventProcessor
 
         try
         {
-            var questionDocument = _mapper.Map<QuestionDocument>(questionPublishedDto);
+            var questionDocument = questionPublishedDto.Adapt<QuestionDocument>();
             await repository.CreateOneAsync(questionDocument, cancellationToken);
         }
         catch (Exception exception)
         {
             Console.WriteLine($"Could not add question document to database due to an exception: {exception.Message}");
         }
-
-
-
-
     }
 }

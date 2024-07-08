@@ -5,7 +5,7 @@ namespace RedditMockup.Common.Helpers;
 
 public static class PasswordHelper
 {
-    public static async Task<string> GetHashStringAsync(this string inputString)
+    public async static Task<string> GetHashStringAsync(this string inputString)
     {
         using HashAlgorithm algorithm = SHA512.Create();
 

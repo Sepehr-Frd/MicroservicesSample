@@ -18,8 +18,6 @@ public class PublicQuestionController : PublicBaseController<Question, QuestionD
 
     private readonly IMessageBusClient _messageBusClient;
 
-    
-
     // [Constructor]
 
     public PublicQuestionController(IPublicBaseBusiness<QuestionDto> questionDtoBaseBusiness, IMessageBusClient messageBusClient) : base(questionDtoBaseBusiness)
@@ -29,21 +27,19 @@ public class PublicQuestionController : PublicBaseController<Question, QuestionD
         _messageBusClient = messageBusClient;
     }
 
-    
-
     [HttpGet]
-    [Route("guid/{guid}/answers")]
+    [Route("guid/{guid:guid}/answers")]
     public async Task<CustomResponse<List<AnswerDto>>> GetAnswersByQuestionGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _publicQuestionBusiness.GetAnswersByQuestionGuidAsync(guid, cancellationToken);
 
     [HttpGet]
-    [Route("guid/{guid}/votes")]
+    [Route("guid/{guid:guid}/votes")]
     public async Task<CustomResponse<List<VoteDto>>> GetVotesByQuestionGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _publicQuestionBusiness.GetVotesByQuestionGuidAsync(guid, cancellationToken);
 
     [Authorize]
     [HttpPost]
-    [Route("guid/{guid}/votes")]
+    [Route("guid/{guid:guid}/votes")]
     public async Task<CustomResponse> SubmitVoteAsync([FromRoute] Guid guid, [FromBody] bool kind, CancellationToken cancellationToken) =>
         await _publicQuestionBusiness.SubmitVoteAsync(guid, kind, cancellationToken);
 
@@ -63,7 +59,6 @@ public class PublicQuestionController : PublicBaseController<Question, QuestionD
         };
 
         _messageBusClient.PublishNewQuestion(questionPublishedDto);
-
     }
 
     // <-----------------------------------------------------------------------

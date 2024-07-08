@@ -2,7 +2,7 @@
 
 public class ProfileDto
 {
-    public string? Bio { get; set; }
+    public string? Bio { get; init; }
 
-    public string? Email { get; set; }
+    public string? Email { get; init; }
 }

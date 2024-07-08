@@ -8,9 +8,8 @@ public class BaseBusiness<T>
 {
     private readonly IBaseRepository<T> _repository;
 
-    public BaseBusiness(IBaseRepository<T> repository) =>
+    protected BaseBusiness(IBaseRepository<T> repository) =>
         _repository = repository;
-
 
     public async Task CreateOneAsync(T t, CancellationToken cancellationToken = default) =>
         await _repository.CreateOneAsync(t, cancellationToken);

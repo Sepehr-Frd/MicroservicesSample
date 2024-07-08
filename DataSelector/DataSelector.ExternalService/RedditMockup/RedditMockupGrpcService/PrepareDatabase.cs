@@ -1,13 +1,13 @@
-﻿using AutoMapper;
-using DataSelector.DataAccess;
+﻿using DataSelector.DataAccess;
 using DataSelector.Model.Models;
+using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataSelector.ExternalService.RedditMockup.RedditMockupGrpcService;
 
 public static class PrepareDatabase
 {
-    public static async Task PreparePopulationAsync(IServiceScopeFactory serviceScopeFactory)
+    public async static Task PreparePopulationAsync(IServiceScopeFactory serviceScopeFactory)
     {
         using var serviceScope = serviceScopeFactory.CreateScope();
 
@@ -22,17 +22,14 @@ public static class PrepareDatabase
             return;
         }
 
-        var mapper = serviceScope.ServiceProvider.GetRequiredService<IMapper>();
-
-        var questions = mapper.Map<IEnumerable<QuestionDocument>>(questionDtos);
+        var questions = questionDtos.Adapt<IEnumerable<QuestionDocument>>();
 
         var questionRepository = serviceScope.ServiceProvider.GetRequiredService<IBaseRepository<QuestionDocument>>();
 
         await SeedDataAsync(questionRepository, questions);
-
     }
 
-    private static async Task SeedDataAsync(IBaseRepository<QuestionDocument> questionRepository, IEnumerable<QuestionDocument> questions)
+    private async static Task SeedDataAsync(IBaseRepository<QuestionDocument> questionRepository, IEnumerable<QuestionDocument> questions)
     {
         await questionRepository.CreateManyAsync(questions);
     }

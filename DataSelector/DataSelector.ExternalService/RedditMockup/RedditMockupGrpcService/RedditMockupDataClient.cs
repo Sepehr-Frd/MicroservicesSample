@@ -1,12 +1,12 @@
-﻿using AutoMapper;
-using DataSelector.Common.Dtos;
+﻿using DataSelector.Common.Dtos;
 using Grpc.Net.Client;
+using Mapster;
 using Microsoft.Extensions.Configuration;
 using RedditMockup;
 
 namespace DataSelector.ExternalService.RedditMockup.RedditMockupGrpcService;
 
-public class RedditMockupDataClient(IConfiguration configuration, IMapperBase mapper) : IRedditMockupDataClient
+public class RedditMockupDataClient(IConfiguration configuration) : IRedditMockupDataClient
 {
     public IEnumerable<QuestionResponseDto>? ReturnAllQuestions()
     {
@@ -28,7 +28,7 @@ public class RedditMockupDataClient(IConfiguration configuration, IMapperBase ma
         try
         {
             var reply = client.GetAllQuestions(request);
-            return mapper.Map<IEnumerable<QuestionResponseDto>>(reply.Question);
+            return reply.Question.Adapt<IEnumerable<QuestionResponseDto>>();
         }
         catch (Exception exception)
         {

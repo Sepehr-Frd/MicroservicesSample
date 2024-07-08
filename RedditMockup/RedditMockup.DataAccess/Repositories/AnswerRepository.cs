@@ -11,15 +11,11 @@ public class AnswerRepository : BaseRepository<Answer>
 
     private readonly RedditMockupContext _context;
 
-    
-
     // [Constructor]
 
     public AnswerRepository(RedditMockupContext context, ISieveProcessor sieveProcessor) :
         base(context, sieveProcessor) =>
         _context = context;
-
-    
 
     // [Methods]
 
@@ -29,7 +25,5 @@ public class AnswerRepository : BaseRepository<Answer>
 
         return entityEntry.Entity;
     }
-
-    
 
 }

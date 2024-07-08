@@ -1,6 +1,6 @@
 # Build
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0.203 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 
@@ -14,7 +14,7 @@ RUN dotnet publish ./DataSelector.Web/DataSelector.Web.csproj -o /publish --no-r
 
 # Serve
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.5
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 WORKDIR /app
 

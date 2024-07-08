@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using RedditMockup.Business.Contracts;
 using RedditMockup.Common.Dtos;
 using RedditMockup.DataAccess.Contracts;
@@ -17,36 +17,28 @@ public abstract class BaseBusiness<TEntity, TDto> : IBaseBusiness<TEntity, TDto>
 
     private readonly IBaseRepository<TEntity> _repository;
 
-    private readonly IMapper _mapper;
-
-    
-
     // [Constructor]
 
-    protected BaseBusiness(IUnitOfWork unitOfWork, IBaseRepository<TEntity> repository, IMapper mapper)
+    protected BaseBusiness(IUnitOfWork unitOfWork, IBaseRepository<TEntity> repository)
     {
         _unitOfWork = unitOfWork;
 
         _repository = repository;
-
-        _mapper = mapper;
     }
-
-    
 
     // [Methods]
 
-    public abstract Task<TEntity?> CreateAsync(TDto answerDto, CancellationToken cancellationToken = default);
+    public abstract Task<TEntity?> CreateAsync(TDto userDto, CancellationToken cancellationToken = default);
 
     protected async Task<TEntity?> CreateAsync(TEntity t, CancellationToken cancellationToken = default)
     {
-        TEntity createdEntity = await _repository.CreateAsync(t, cancellationToken);
+        var createdEntity = await _repository.CreateAsync(t, cancellationToken);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
         return createdEntity;
     }
-    
+
     public abstract Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
     public abstract Task<TEntity?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default);
@@ -55,16 +47,16 @@ public abstract class BaseBusiness<TEntity, TDto> : IBaseBusiness<TEntity, TDto>
 
     public async Task<TEntity?> UpdateAsync(TDto dto, CancellationToken cancellationToken = default)
     {
-        TEntity? t = await GetByGuidAsync(dto.Guid, cancellationToken);
+        var t = await GetByGuidAsync(dto.Guid, cancellationToken);
 
         if (t is null)
         {
             return null;
         }
 
-        _mapper.Map(dto, t);
+        dto.Adapt(t);
 
-        TEntity updatedEntity = _repository.Update(t);
+        var updatedEntity = _repository.Update(t);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
@@ -80,7 +72,7 @@ public abstract class BaseBusiness<TEntity, TDto> : IBaseBusiness<TEntity, TDto>
             return null;
         }
 
-        TEntity deletedEntity = _repository.Delete(entity);
+        var deletedEntity = _repository.Delete(entity);
 
         await _unitOfWork.CommitAsync(cancellationToken);
 
@@ -89,10 +81,9 @@ public abstract class BaseBusiness<TEntity, TDto> : IBaseBusiness<TEntity, TDto>
 
     public async Task<TEntity?> DeleteByGuidAsync(Guid guid, CancellationToken cancellationToken = default)
     {
-        TEntity? entity = await GetByGuidAsync(guid, cancellationToken);
+        var entity = await GetByGuidAsync(guid, cancellationToken);
 
         return entity is null ? null : _repository.Delete(entity);
     }
 
-    
 }

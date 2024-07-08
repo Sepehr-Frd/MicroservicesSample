@@ -6,13 +6,10 @@ public class Role : BaseEntityWithGuid
 {
     // [Properties]
 
-    public string? Title { get; set; }
-
-    
+    public string? Title { get; init; }
 
     // [Navigation Properties]
 
-    public ICollection<UserRole>? UserRoles { get; set; }
+    public ICollection<UserRole>? UserRoles { get; init; }
 
-    
 }

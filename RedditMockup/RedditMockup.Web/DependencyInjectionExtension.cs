@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Text.Json.Serialization;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,6 @@ using RedditMockup.Business.DomainEntityBusinesses;
 using RedditMockup.Business.PublicBusinesses;
 using RedditMockup.Common.Constants;
 using RedditMockup.Common.Dtos;
-using RedditMockup.Common.Profiles;
 using RedditMockup.Common.Validations;
 using RedditMockup.DataAccess;
 using RedditMockup.DataAccess.Context;
@@ -17,7 +17,6 @@ using RedditMockup.ExternalService.RabbitMQService.Contracts;
 using RedditMockup.Model.Entities;
 using Serilog;
 using Sieve.Services;
-using System.Text.Json.Serialization;
 
 namespace RedditMockup.Web;
 
@@ -78,20 +77,19 @@ internal static class DependencyInjectionExtension
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
             })
             .AddCookie(options =>
             {
                 options.Events.OnRedirectToLogin = context =>
                 {
-                    context.Response.Headers["Location"] = context.RedirectUri;
+                    context.Response.Headers.Location = context.RedirectUri;
                     context.Response.StatusCode = 401;
                     return Task.CompletedTask;
                 };
 
                 options.Events.OnRedirectToAccessDenied = context =>
                 {
-                    context.Response.Headers["Location"] = context.RedirectUri;
+                    context.Response.Headers.Location = context.RedirectUri;
                     context.Response.StatusCode = 403;
                     return Task.CompletedTask;
                 };
@@ -118,15 +116,9 @@ internal static class DependencyInjectionExtension
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<RoleValidator>();
 
-    internal static IServiceCollection InjectAutoMapper(this IServiceCollection services) =>
-        services.AddAutoMapper(typeof(AnswerProfile).Assembly);
-
     internal static IServiceCollection InjectRabbitMq(this IServiceCollection services) =>
         services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
     internal static IServiceCollection InjectGrpc(this IServiceCollection services) =>
-        services.AddGrpc(configure =>
-        {
-            configure.EnableDetailedErrors = true;
-        }).Services;
+        services.AddGrpc(configure => { configure.EnableDetailedErrors = true; }).Services;
 }

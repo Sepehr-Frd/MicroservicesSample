@@ -4,7 +4,7 @@ namespace RedditMockup.Business.Contracts;
 
 public interface IBaseBusiness<TEntity, in TDto>
 {
-    Task<TEntity?> CreateAsync(TDto answerDto, CancellationToken cancellationToken = default);
+    Task<TEntity?> CreateAsync(TDto userDto, CancellationToken cancellationToken = default);
 
     Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 

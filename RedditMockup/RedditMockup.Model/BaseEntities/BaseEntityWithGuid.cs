@@ -9,11 +9,8 @@ public class BaseEntityWithGuid : BaseEntity
 
     protected BaseEntityWithGuid() => Guid = Guid.NewGuid();
 
-    
-
     // [Properties]
 
     public Guid Guid { get; }
 
-    
 }

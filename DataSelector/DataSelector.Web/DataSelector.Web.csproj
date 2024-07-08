@@ -13,16 +13,16 @@
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'DataSelector.Web(Production)' "/>
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'DataSelector.Web(Testing)' "/>
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.25.0"/>
-        <PackageReference Include="Grpc.Net.Client" Version="2.59.0"/>
-        <PackageReference Include="Grpc.Tools" Version="2.59.0">
+        <PackageReference Include="Google.Protobuf" Version="3.27.2" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.63.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.64.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
+        <PackageReference Include="Mapster" Version="7.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
     <ItemGroup>

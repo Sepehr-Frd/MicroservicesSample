@@ -1,4 +1,4 @@
-﻿using RedditMockup.DataAccess.Repositories;
+﻿using RedditMockup.Model.Entities;
 
 namespace RedditMockup.DataAccess.Contracts;
 
@@ -6,21 +6,17 @@ public interface IUnitOfWork
 {
     // [Properties]
 
-    AnswerRepository? AnswerRepository { get; }
+    IBaseRepository<Answer>? AnswerRepository { get; }
 
-    PersonRepository? PersonRepository { get; }
+    IBaseRepository<Person>? PersonRepository { get; }
 
-    QuestionRepository? QuestionRepository { get; }
+    IBaseRepository<Question>? QuestionRepository { get; }
 
-    RoleRepository? RoleRepository { get; }
+    IBaseRepository<Role>? RoleRepository { get; }
 
-    UserRepository? UserRepository { get; }
-
-    
+    IBaseRepository<User>? UserRepository { get; }
 
     // [Methods]
 
     Task<int> CommitAsync(CancellationToken cancellationToken);
-
-    
 }

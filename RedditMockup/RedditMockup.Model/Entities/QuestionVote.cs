@@ -8,15 +8,12 @@ public class QuestionVote : BaseEntity
     // [Properties]
 
     [Sieve(CanSort = true)]
-    public bool Kind { get; set; }
-
-    
+    public bool Kind { get; init; }
 
     // [Navigation Properties]
 
-    public int QuestionId { get; set; }
+    public int QuestionId { get; init; }
 
-    public Question? Question { get; set; }
+    public Question? Question { get; init; }
 
-    
 }

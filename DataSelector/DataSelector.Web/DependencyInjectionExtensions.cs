@@ -1,10 +1,8 @@
 ﻿using DataSelector.Business.Businesses;
-using DataSelector.Common.Profiles;
 using DataSelector.DataAccess;
 using DataSelector.DataAccess.Repositories;
 using DataSelector.ExternalService.RabbitMQ;
 using DataSelector.ExternalService.RabbitMQ.EventProcessing;
-using DataSelector.ExternalService.RedditMockup;
 using DataSelector.ExternalService.RedditMockup.RedditMockupGrpcService;
 using DataSelector.Model.Models;
 
@@ -22,12 +20,6 @@ public static class DependencyInjectionExtensions
 
     public static IServiceCollection InjectBusinesses(this IServiceCollection services) =>
         services.AddScoped<QuestionBusiness>();
-
-    public static IServiceCollection InjectServices(this IServiceCollection services) =>
-        services.AddScoped<RedditMockupRestService>();
-
-    internal static IServiceCollection InjectAutoMapper(this IServiceCollection services) =>
-        services.AddAutoMapper(typeof(QuestionProfile).Assembly);
 
     internal static IServiceCollection InjectExternalServices(this IServiceCollection services) =>
         services

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using RedditMockup.Business.Base;
 using RedditMockup.Common.Dtos;
@@ -6,32 +7,38 @@ using RedditMockup.DataAccess.Contracts;
 using RedditMockup.DataAccess.Repositories;
 using RedditMockup.Model.Entities;
 using Sieve.Models;
-using System.Net;
 
 namespace RedditMockup.Business.DomainEntityBusinesses;
 
-public class AnswerBusiness(IUnitOfWork unitOfWork, IMapper mapper) : BaseBusiness<Answer, AnswerDto>(unitOfWork, unitOfWork.AnswerRepository!, mapper)
+public class AnswerBusiness : BaseBusiness<Answer, AnswerDto>
 {
     // [Fields]
 
-    private readonly AnswerRepository _answerRepository = unitOfWork.AnswerRepository!;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly AnswerRepository _answerRepository;
 
-    
-    
+    // [Constructor]
+
+    public AnswerBusiness(IUnitOfWork unitOfWork, IBaseRepository<Answer> repository) : base(unitOfWork, repository)
+    {
+        _unitOfWork = unitOfWork;
+        _answerRepository = (AnswerRepository)unitOfWork.AnswerRepository!;
+    }
+
     // [Methods]
 
-    public override async Task<Answer?> CreateAsync(AnswerDto answerDto, CancellationToken cancellationToken = default)
+    public async override Task<Answer?> CreateAsync(AnswerDto userDto, CancellationToken cancellationToken = default)
     {
-        var answer = mapper.Map<Answer>(answerDto);
+        var answer = userDto.Adapt<Answer>();
 
-        var user = await unitOfWork.UserRepository!.GetByGuidAsync(answerDto.UserGuid, null, cancellationToken);
+        var user = await _unitOfWork.UserRepository!.GetByGuidAsync(userDto.UserGuid, null, cancellationToken);
 
         if (user is null)
         {
             return null;
         }
 
-        var question = await unitOfWork.QuestionRepository!.GetByGuidAsync(answerDto.QuestionGuid, null, cancellationToken);
+        var question = await _unitOfWork.QuestionRepository!.GetByGuidAsync(userDto.QuestionGuid, null, cancellationToken);
 
         if (question is null)
         {
@@ -45,25 +52,23 @@ public class AnswerBusiness(IUnitOfWork unitOfWork, IMapper mapper) : BaseBusine
         return await CreateAsync(answer, cancellationToken);
     }
 
-    public override async Task<Answer?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+    public async override Task<Answer?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         await _answerRepository.GetByIdAsync(id,
             answers => answers.Include(answer => answer.User)
                 .Include(answer => answer.Question),
             cancellationToken);
 
-    public override async Task<Answer?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default) =>
+    public async override Task<Answer?> GetByGuidAsync(Guid guid, CancellationToken cancellationToken = default) =>
         await _answerRepository.GetByGuidAsync(guid,
             answers => answers.Include(answer => answer.User)
                 .Include(answer => answer.Question),
             cancellationToken);
 
-    public override async Task<List<Answer>?> GetAllAsync(SieveModel sieveModel, CancellationToken cancellationToken = default) =>
+    public async override Task<List<Answer>?> GetAllAsync(SieveModel sieveModel, CancellationToken cancellationToken = default) =>
         await _answerRepository.GetAllAsync(sieveModel,
             answers => answers.Include(answer => answer.User)
                 .Include(answer => answer.Question),
             cancellationToken);
-
-
 
     public async Task<CustomResponse> SubmitVoteAsync(Guid answerGuid, bool kind, CancellationToken cancellationToken = default)
     {
@@ -95,7 +100,7 @@ public class AnswerBusiness(IUnitOfWork unitOfWork, IMapper mapper) : BaseBusine
 
         await _answerRepository.SubmitVoteAsync(vote, cancellationToken);
 
-        await unitOfWork.CommitAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         return CustomResponse.CreateSuccessfulResponse($"{(kind ? "Up" : "Down")}vote submitted");
     }
@@ -113,8 +118,5 @@ public class AnswerBusiness(IUnitOfWork unitOfWork, IMapper mapper) : BaseBusine
         var votes = answer.Votes!.ToList();
 
         return CustomResponse<List<AnswerVote>>.CreateSuccessfulResponse(votes);
-
     }
-
-    
 }

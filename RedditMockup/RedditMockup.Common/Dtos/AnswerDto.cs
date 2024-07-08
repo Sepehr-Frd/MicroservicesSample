@@ -2,11 +2,11 @@
 
 public class AnswerDto : BaseDto
 {
-    public Guid QuestionGuid { get; set; }
+    public Guid QuestionGuid { get; init; }
 
-    public Guid UserGuid { get; set; }
-    
-    public string? Title { get; set; }
-    
-    public string? Description { get; set; }
+    public Guid UserGuid { get; init; }
+
+    public string? Title { get; init; }
+
+    public string? Description { get; init; }
 }

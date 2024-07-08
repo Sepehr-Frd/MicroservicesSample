@@ -1,6 +1,6 @@
-﻿using Sieve.Attributes;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Sieve.Attributes;
 
 namespace RedditMockup.Model.BaseEntities;
 
@@ -9,8 +9,6 @@ public class BaseEntity
     // [Constructor]
 
     protected BaseEntity() => CreationDate = LastUpdated = DateTime.Now;
-
-    
 
     // [Properties]
 
@@ -25,5 +23,4 @@ public class BaseEntity
     [Sieve(CanSort = true)]
     public DateTime LastUpdated { get; set; }
 
-    
 }

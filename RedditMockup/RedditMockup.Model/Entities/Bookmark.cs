@@ -5,19 +5,16 @@ namespace RedditMockup.Model.Entities;
 public class Bookmark : BaseEntity
 {
     // [Properties]
-    public bool IsBookmarked { get; set; }
-
-    
+    public bool IsBookmarked { get; init; }
 
     // [Navigation Properties]
 
-    public int UserId { get; set; }
+    public int UserId { get; init; }
 
-    public User? User { get; set; }
+    public User? User { get; init; }
 
-    public int QuestionId { get; set; }
+    public int QuestionId { get; init; }
 
-    public Question? Question { get; set; }
+    public Question? Question { get; init; }
 
-    
 }

@@ -14,5 +14,4 @@ public class PersonRepository : BaseRepository<Person>
     {
     }
 
-    
 }

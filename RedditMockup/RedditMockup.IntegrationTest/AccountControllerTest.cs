@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using RedditMockup.Common.Dtos;
 using RestSharp;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace RedditMockup.IntegrationTest;
@@ -22,16 +22,12 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
     private readonly HttpClient _client;
 
-    
-
     // [Constructor]
 
     public AccountControllerTest(WebApplicationFactory<Program> factory) =>
         _client = factory.WithWebHostBuilder(builder =>
                 builder.UseEnvironment("Testing"))
             .CreateClient();
-
-    
 
     // [Theory Method(s)]
 
@@ -50,19 +46,15 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         request.AddJsonBody(loginDto);
 
-        
 
         // [Act]
 
         var response = await client.ExecutePostAsync<CustomResponse>(request);
 
-        
 
         // [Assert]
 
         response.Data?.IsSuccess.Should().Be(expected);
-
-        
     }
 
     [Theory]
@@ -73,7 +65,6 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var client = new RestClient(_client);
 
-        
 
         // [Act]
 
@@ -88,7 +79,6 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var loginResponse = await client.ExecutePostAsync<CustomResponse>(loginRequest);
 
-        
 
         // [GetAll]
 
@@ -99,7 +89,6 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var getAllResponse = await client.ExecuteGetAsync<CustomResponse>(getAllRequest);
 
-        
 
         // [Logout]
 
@@ -110,53 +99,38 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
 
         var logoutResponse = await client.ExecutePostAsync<CustomResponse>(logoutRequest);
 
-        
-
-        
 
         // [Assert]
 
-        switch (expected)
+        if (expected == TestResultCode.AllFailed)
         {
-            case TestResultCode.AllFailed:
+            loginResponse.Data?.IsSuccess.Should().BeFalse();
 
-                loginResponse.Data?.IsSuccess.Should().BeFalse();
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
-                getAllResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-
-                logoutResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-
-                break;
-
-            case TestResultCode.AllSuccessful:
-
-                loginResponse.Data?.IsSuccess.Should().BeTrue();
-
-                getAllResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                logoutResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                break;
-
-            case TestResultCode.Unauthorized:
-
-                loginResponse.Data?.IsSuccess.Should().BeTrue();
-
-                getAllResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-
-                logoutResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-                break;
-
-            default:
-                Assert.True(false);
-                break;
+            logoutResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
+        else if (expected == TestResultCode.AllSuccessful)
+        {
+            loginResponse.Data?.IsSuccess.Should().BeTrue();
 
-        
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            logoutResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+        else if (expected == TestResultCode.Unauthorized)
+        {
+            loginResponse.Data?.IsSuccess.Should().BeTrue();
+
+            getAllResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+
+            logoutResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+        else
+        {
+            Assert.True(false);
+        }
     }
-
-    
 
     // [Data Method(s)]
 
@@ -259,8 +233,6 @@ public class AccountControllerTest : IClassFixture<WebApplicationFactory<Program
             }
         };
     }
-
-    
 
     public enum TestResultCode
     {

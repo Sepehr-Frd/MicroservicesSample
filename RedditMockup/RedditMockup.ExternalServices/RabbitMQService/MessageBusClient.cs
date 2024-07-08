@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RedditMockup.Common.Dtos;
 using RedditMockup.ExternalService.RabbitMQService.Contracts;
 using Serilog;
-using System.Text;
-using System.Text.Json;
 
 namespace RedditMockup.ExternalService.RabbitMQService;
 

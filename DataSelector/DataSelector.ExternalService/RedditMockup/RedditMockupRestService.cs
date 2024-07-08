@@ -1,22 +1,22 @@
-﻿using AutoMapper;
-using DataSelector.Common.Dtos;
+﻿using DataSelector.Common.Dtos;
 using DataSelector.Model.Models;
+using Mapster;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace DataSelector.ExternalService.RedditMockup;
 
-public class RedditMockupRestService(IMapperBase mapper)
+public static class RedditMockupRestService
 {
     private const string BaseAddress = "http://reddit-mockup-clusterip-service:80/PublicApi";
 
-    public async Task<List<QuestionDocument>?> GetQuestionsAsync(CancellationToken cancellationToken = default)
+    public async static Task<List<QuestionDocument>?> GetQuestionsAsync(CancellationToken cancellationToken = default)
     {
         var restClient = new RestClient();
 
         var restRequest = new RestRequest($"{BaseAddress}/Question")
         {
-            Timeout = TimeSpan.FromSeconds(5).Milliseconds
+            Timeout = TimeSpan.FromSeconds(5)
         };
 
         var restResponse = await restClient.ExecuteGetAsync(restRequest, cancellationToken);
@@ -27,7 +27,7 @@ public class RedditMockupRestService(IMapperBase mapper)
                         restResponse.Content ?? ""),
                 cancellationToken);
 
-        var questions = mapper.Map<List<QuestionDocument>>(deserializedResponse?.Data);
+        var questions = deserializedResponse?.Data.Adapt<List<QuestionDocument>>();
 
         return questions;
     }

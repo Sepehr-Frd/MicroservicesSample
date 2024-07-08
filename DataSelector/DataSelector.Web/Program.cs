@@ -10,8 +10,6 @@ builder.Services
     .InjectRepositories()
     .InjectBusinesses()
     .InjectControllers()
-    .InjectServices()
-    .InjectAutoMapper()
     .InjectExternalServices()
     .InjectMessageBusSubscriber();
 
@@ -26,7 +24,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using IServiceScope serviceScope = app.Services.CreateScope();
+using var serviceScope = app.Services.CreateScope();
 
 var serviceScopeFactory = serviceScope.ServiceProvider.GetRequiredService<IServiceScopeFactory>();
 

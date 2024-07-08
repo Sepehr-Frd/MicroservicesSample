@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using RedditMockup.Business.Base;
 using RedditMockup.Business.Contracts;
 using RedditMockup.Business.DomainEntityBusinesses;
@@ -13,20 +13,12 @@ public class PublicQuestionBusiness : PublicBaseBusiness<Question, QuestionDto>
 
     private readonly QuestionBusiness _questionBusiness;
 
-    private readonly IMapper _mapper;
-
-    
-
     // [Constructor]
 
-    public PublicQuestionBusiness(IBaseBusiness<Question, QuestionDto> questionBusiness, IMapper mapper) : base(questionBusiness, mapper)
+    public PublicQuestionBusiness(IBaseBusiness<Question, QuestionDto> questionBusiness) : base(questionBusiness)
     {
         _questionBusiness = (QuestionBusiness)questionBusiness;
-
-        _mapper = mapper;
     }
-
-    
 
     // [Methods]
 
@@ -39,7 +31,7 @@ public class PublicQuestionBusiness : PublicBaseBusiness<Question, QuestionDto>
             return CustomResponse<List<AnswerDto>>.CreateUnsuccessfulResponse(answersResponse.HttpStatusCode, answersResponse.Message);
         }
 
-        var answerDtos = _mapper.Map<List<AnswerDto>>(answersResponse.Data);
+        var answerDtos = answersResponse.Data.Adapt<List<AnswerDto>>();
 
         return CustomResponse<List<AnswerDto>>.CreateSuccessfulResponse(answerDtos);
     }
@@ -53,7 +45,7 @@ public class PublicQuestionBusiness : PublicBaseBusiness<Question, QuestionDto>
             return CustomResponse<List<VoteDto>>.CreateUnsuccessfulResponse(votesResponse.HttpStatusCode, votesResponse.Message);
         }
 
-        var voteDtos = _mapper.Map<List<VoteDto>>(votesResponse.Data);
+        var voteDtos = votesResponse.Data.Adapt<List<VoteDto>>();
 
         return CustomResponse<List<VoteDto>>.CreateSuccessfulResponse(voteDtos);
     }
@@ -61,5 +53,4 @@ public class PublicQuestionBusiness : PublicBaseBusiness<Question, QuestionDto>
     public async Task<CustomResponse> SubmitVoteAsync(Guid questionGuid, bool kind, CancellationToken cancellationToken = default) =>
         await _questionBusiness.SubmitVoteAsync(questionGuid, kind, cancellationToken);
 
-    
 }

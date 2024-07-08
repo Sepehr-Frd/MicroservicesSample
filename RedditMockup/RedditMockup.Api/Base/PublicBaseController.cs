@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RedditMockup.Business.Contracts;
 using RedditMockup.Common.Dtos;
@@ -17,14 +18,10 @@ public class PublicBaseController<TEntity, TDto> : ControllerBase
 
     private readonly IPublicBaseBusiness<TDto> _publicBaseBusiness;
 
-    
-
     // [Constructor]
 
     public PublicBaseController(IPublicBaseBusiness<TDto> publicBaseBusiness) =>
         _publicBaseBusiness = publicBaseBusiness;
-
-    
 
     // [Methods]
 
@@ -38,13 +35,13 @@ public class PublicBaseController<TEntity, TDto> : ControllerBase
         await _publicBaseBusiness.PublicGetAllAsync(sieveModel, cancellationToken);
 
     [HttpGet]
-    [Route("guid/{guid}")]
+    [Route("guid/{guid:guid}")]
     public async Task<CustomResponse<TDto>> GetByGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _publicBaseBusiness.PublicGetByGuidAsync(guid, cancellationToken);
 
     [Authorize]
     [HttpDelete]
-    [Route("guid/{guid}")]
+    [Route("guid/{guid:guid}")]
     public async Task<CustomResponse<TDto>> DeleteByGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _publicBaseBusiness.PublicDeleteByGuidAsync(guid, cancellationToken);
 
@@ -56,7 +53,6 @@ public class PublicBaseController<TEntity, TDto> : ControllerBase
 
     [HttpOptions]
     public void Options() =>
-        Response.Headers.Add("Allow", "POST,PUT,DELETE,GET");
+        Response.Headers.Append("Allow", "POST,PUT,DELETE,GET");
 
-    
 }

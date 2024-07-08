@@ -7,18 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.1"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Remove="Dtos\"/>
         <None Remove="MappingProfiles\"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Dtos\"/>
-        <Folder Include="Profiles\"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\DataSelector.Model\DataSelector.Model.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="7.4.0" />
     </ItemGroup>
 </Project>

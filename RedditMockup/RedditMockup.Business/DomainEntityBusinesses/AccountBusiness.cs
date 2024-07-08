@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.Net;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +10,6 @@ using RedditMockup.DataAccess.Contracts;
 using RedditMockup.DataAccess.Repositories;
 using RedditMockup.Model.Entities;
 using Sieve.Models;
-using System.Net;
-using System.Security.Claims;
 
 namespace RedditMockup.Business.DomainEntityBusinesses;
 
@@ -19,14 +19,10 @@ public class AccountBusiness
 
     private readonly UserRepository _userRepository;
 
-    
-
     // [Constructor]
 
     public AccountBusiness(IUnitOfWork unitOfWork) =>
-        _userRepository = unitOfWork.UserRepository!;
-
-    
+        _userRepository = (UserRepository)unitOfWork.UserRepository!;
 
     // [Private Methods]
 
@@ -45,7 +41,6 @@ public class AccountBusiness
         var isPasswordValid = password == user.Password;
 
         return !isPasswordValid ? null : user;
-
     }
 
     private static bool IsSignedIn(HttpContext httpContext) =>
@@ -65,8 +60,6 @@ public class AccountBusiness
 
         return users.Count == 0 ? null : users.Single();
     }
-
-    
 
     // [Public Methods]
 
@@ -108,7 +101,7 @@ public class AccountBusiness
         return CustomResponse.CreateSuccessfulResponse("Successfully logged in.");
     }
 
-    public static async Task<CustomResponse> LogoutAsync(HttpContext httpContext)
+    public async static Task<CustomResponse> LogoutAsync(HttpContext httpContext)
     {
         if (!IsSignedIn(httpContext))
         {
@@ -120,5 +113,4 @@ public class AccountBusiness
         return CustomResponse.CreateSuccessfulResponse("Successfully logged out.");
     }
 
-    
 }

@@ -7,14 +7,14 @@ public class Profile : BaseEntity
 {
     // [Properties]
 
-    public string? Bio { get; set; } = string.Empty;
+    public string? Bio { get; init; } = string.Empty;
 
     [Sieve(CanFilter = true, CanSort = true)]
-    public string? Email { get; set; } = string.Empty;
-    
+    public string? Email { get; init; } = string.Empty;
+
     // [Navigation Properties]
-    
-    public int UserId { get; set; }
-    
-    public User? User { get; set; }
+
+    public int UserId { get; init; }
+
+    public User? User { get; init; }
 }

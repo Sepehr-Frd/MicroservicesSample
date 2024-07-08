@@ -4,6 +4,7 @@ using RedditMockup.Service.Grpc;
 using RedditMockup.Web;
 using Serilog;
 using Serilog.Settings.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // macOS Configuration for gRPC over HTTP 2.0 Without TLS --------------------------->
@@ -12,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
  builder.WebHost.ConfigureKestrel(options =>
 {
     // Setup a HTTP/2 endpoint without TLS.
-    
+
     options.ListenLocalhost(6000, o => o.Protocols =
         HttpProtocols.Http2);
 });
@@ -49,7 +50,6 @@ try
         .InjectBusinesses()
         .InjectFluentValidation()
         .InjectRabbitMq()
-        .InjectAutoMapper()
         .InjectGrpc()
         .AddHealthChecks();
 
@@ -85,11 +85,7 @@ try
             endpoints.MapControllers();
             endpoints.MapHealthChecks("/healthcheck");
             endpoints.MapGrpcService<GrpcService>();
-            endpoints.MapGet("/protos/redditmockup.proto", async httpContext =>
-            {
-                await httpContext.Response.WriteAsync(File.ReadAllText("../RedditMockup.Model/Protos/redditmockup.proto"));
-            });
-
+            endpoints.MapGet("/protos/redditmockup.proto", async httpContext => { await httpContext.Response.WriteAsync(File.ReadAllText("../RedditMockup.Model/Protos/redditmockup.proto")); });
         });
     await app.RunAsync();
 }
@@ -103,6 +99,4 @@ finally
     Log.CloseAndFlush();
 }
 
-public partial class Program
-{
-}
+public partial class Program;

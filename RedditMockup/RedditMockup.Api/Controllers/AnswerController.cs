@@ -14,26 +14,21 @@ public class AnswerController : BaseController<Answer, AnswerDto>
 
     private readonly AnswerBusiness _business;
 
-    
-
     // [Constructor]
 
     public AnswerController(IBaseBusiness<Answer, AnswerDto> business) : base(business) =>
         _business = (AnswerBusiness)business;
 
-    
-
     // [Methods]
 
     [HttpGet]
-    [Route("{guid}/votes")]
+    [Route("{guid:guid}/votes")]
     public async Task<CustomResponse<List<AnswerVote>>> GetVotesByAnswerGuidAsync([FromRoute] Guid guid, CancellationToken cancellationToken) =>
         await _business.GetVotesByAnswerGuidAsync(guid, cancellationToken);
 
     [HttpPost]
-    [Route("{answerGuid}/votes")]
+    [Route("{answerGuid:guid}/votes")]
     public async Task<CustomResponse> SubmitVoteAsync([FromRoute] Guid answerGuid, [FromBody] bool kind, CancellationToken cancellationToken) =>
         await _business.SubmitVoteAsync(answerGuid, kind, cancellationToken);
 
-    
 }

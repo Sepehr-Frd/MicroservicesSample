@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using RedditMockup.DataAccess.Context;
 using RedditMockup.DataAccess.Contracts;
 using RedditMockup.Model.BaseEntities;
 using Sieve.Models;
@@ -16,17 +15,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntityWithGuid
 
     private readonly ISieveProcessor _processor;
 
-    
-
     // [Constructor]
 
-    protected BaseRepository(RedditMockupContext context, ISieveProcessor processor)
+    protected BaseRepository(DbContext context, ISieveProcessor processor)
     {
         _processor = processor;
         _dbSet = context.Set<T>();
     }
-
-    
 
     // [Methods]
 
@@ -80,5 +75,4 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntityWithGuid
     public T Delete(T t) =>
         _dbSet.Remove(t).Entity;
 
-    
 }

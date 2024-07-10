@@ -14,6 +14,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: reddit-mockup-clusterip-service
+                name: todo-list-manager-clusterip-service
                 port:
                   number: 80

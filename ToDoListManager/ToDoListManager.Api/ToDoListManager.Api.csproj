@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Base\" />
+        <Folder Include="PublicControllers\" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ToDoListManager.Common\ToDoListManager.Common.csproj" />
+        <ProjectReference Include="..\ToDoListManager.Business\ToDoListManager.Business.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="7.4.0" />
+    </ItemGroup>
+</Project>

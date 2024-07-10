@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: reddit-mockup-deployment
+  name: todo-list-manager-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redditmockup
+      app: todo-list-manager
   template:
     metadata:
       labels:
-        app: redditmockup
+        app: todo-list-manager
     spec:
       containers:
-        - name: redditmockup
-          image: local/reddit-mockup-web:1.0
+        - name: todo-list-manager
+          image: local/todo-list-manager-web:1.0
           resources:
             limits:
               memory: "250Mi"
@@ -23,11 +23,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: reddit-mockup-clusterip-service
+  name: todo-list-manager-clusterip-service
 spec:
   type: ClusterIP
   selector:
-    app: redditmockup
+    app: todo-list-manager
   ports:
     - name: http
       protocol: TCP

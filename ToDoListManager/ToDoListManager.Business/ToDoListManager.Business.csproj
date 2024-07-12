@@ -12,9 +12,7 @@
         <None Remove="Contracts\" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="DomainEntityBusinesses\" />
-    </ItemGroup>
-    <ItemGroup>
+      <PackageReference Include="Humanizer.Core" Version="2.14.1" />
       <PackageReference Include="Mapster" Version="7.4.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>

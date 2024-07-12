@@ -6,10 +6,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Base\" />
-        <Folder Include="PublicControllers\" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\ToDoListManager.Common\ToDoListManager.Common.csproj" />
         <ProjectReference Include="..\ToDoListManager.Business\ToDoListManager.Business.csproj" />
     </ItemGroup>

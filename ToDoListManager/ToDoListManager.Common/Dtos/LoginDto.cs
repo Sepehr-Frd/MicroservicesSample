@@ -7,5 +7,4 @@ public class LoginDto
     public string? Password { get; init; }
 
     public bool RememberMe { get; init; }
-
 }

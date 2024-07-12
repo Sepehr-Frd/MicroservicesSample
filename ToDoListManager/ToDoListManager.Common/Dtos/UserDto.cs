@@ -1,16 +1,12 @@
-﻿namespace ToDoListManager.Common.Dtos;
+using ToDoListManager.Model.Entities;
 
-public class UserDto : BaseDto
-{
-    public string? Username { get; init; }
+namespace ToDoListManager.Common.Dtos;
 
-    public string? Password { get; init; }
-
-    public int Score { get; init; }
-
-    public string? FirstName { get; init; }
-
-    public string? LastName { get; init; }
-
-    public ProfileDto? Profile { get; init; }
-}
+public record UserDto(
+    Guid Guid,
+    string Username,
+    string Email,
+    ICollection<ToDoListDto> ToDoLists,
+    ICollection<Category> Categories,
+    string FirstName,
+    string? LastName = null);

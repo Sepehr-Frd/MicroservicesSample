@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
         <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.7" />
     </ItemGroup>
 
     <ItemGroup>

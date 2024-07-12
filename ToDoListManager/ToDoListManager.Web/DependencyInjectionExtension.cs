@@ -4,19 +4,14 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Sieve.Services;
+using ToDoListManager.Business.Businesses;
 using ToDoListManager.Business.Contracts;
-using ToDoListManager.Business.DomainEntityBusinesses;
-using ToDoListManager.Business.PublicBusinesses;
-using ToDoListManager.Common.Constants;
-using ToDoListManager.Common.Dtos;
 using ToDoListManager.Common.Validations;
 using ToDoListManager.DataAccess;
 using ToDoListManager.DataAccess.Context;
 using ToDoListManager.DataAccess.Contracts;
 using ToDoListManager.ExternalService.RabbitMQService;
 using ToDoListManager.ExternalService.RabbitMQService.Contracts;
-using ToDoListManager.Model.Entities;
 
 namespace ToDoListManager.Web;
 
@@ -67,9 +62,6 @@ internal static class DependencyInjectionExtension
     internal static IServiceCollection InjectSerilog(this IServiceCollection services, IConfiguration configuration) =>
         services.AddSerilog(x => x.ReadFrom.Configuration(configuration));
 
-    internal static IServiceCollection InjectSieve(this IServiceCollection services) =>
-        services.AddScoped<ISieveProcessor, SieveProcessor>();
-
     internal static IServiceCollection InjectAuthentication(this IServiceCollection services) =>
         services
             .AddAuthentication(options =>
@@ -95,26 +87,20 @@ internal static class DependencyInjectionExtension
                 };
             })
             .Services
-            .AddAuthorization(options =>
-            {
-                options.AddPolicy(PolicyConstants.Admin,
-                    policy => policy.RequireClaim(RoleConstants.Admin));
-                options.AddPolicy(PolicyConstants.User,
-                    policy => policy.RequireClaim(RoleConstants.User));
-            });
+            .AddAuthorization();
 
     internal static IServiceCollection InjectBusinesses(this IServiceCollection services) =>
-        services.AddScoped<IBaseBusiness<User, UserDto>, UserBusiness>()
-            .AddScoped<IBaseBusiness<Answer, AnswerDto>, AnswerBusiness>()
-            .AddScoped<IBaseBusiness<Question, QuestionDto>, QuestionBusiness>()
-            .AddScoped<IPublicBaseBusiness<AnswerDto>, PublicAnswerBusiness>()
-            .AddScoped<IPublicBaseBusiness<QuestionDto>, PublicQuestionBusiness>()
-            .AddScoped<AccountBusiness>();
+        services
+            .AddScoped<IAuthBusiness, AuthBusiness>()
+            .AddScoped<ICategoryBusiness, CategoryBusiness>()
+            .AddScoped<IToDoItemBusiness, ToDoItemBusiness>()
+            .AddScoped<IToDoListBusiness, ToDoListBusiness>()
+            .AddScoped<IUserBusiness, UserBusiness>();
 
     internal static IServiceCollection InjectFluentValidation(this IServiceCollection services) =>
         services
             .AddFluentValidationAutoValidation()
-            .AddValidatorsFromAssemblyContaining<RoleValidator>();
+            .AddValidatorsFromAssemblyContaining<PersonValidator>();
 
     internal static IServiceCollection InjectRabbitMq(this IServiceCollection services) =>
         services.AddSingleton<IMessageBusClient, MessageBusClient>();

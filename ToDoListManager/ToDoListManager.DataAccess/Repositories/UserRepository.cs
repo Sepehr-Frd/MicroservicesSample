@@ -1,5 +1,4 @@
-﻿using Sieve.Services;
-using ToDoListManager.DataAccess.Base;
+﻿using ToDoListManager.DataAccess.Base;
 using ToDoListManager.DataAccess.Context;
 using ToDoListManager.Model.Entities;
 
@@ -13,5 +12,4 @@ public class UserRepository : BaseRepository<User>
         base(dbContext)
     {
     }
-
 }

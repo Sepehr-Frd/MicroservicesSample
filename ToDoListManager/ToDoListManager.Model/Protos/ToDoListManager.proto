@@ -1,19 +1,26 @@
 syntax = "proto3";
 
+import "google/protobuf/wrappers.proto";
+
 option csharp_namespace = "ToDoListManager";
 
 service ToDoListManagerGrpc {
-    rpc GetAllQuestions (GetAllRequest) returns (GrpcResponse);
+    rpc GetAllToDoItems (GetAllRequest) returns (GrpcResponse);
 }
 
 message GetAllRequest {}
 
-message GrpcQuestionModel {
-    int32 id = 1;
+message GrpcToDoItemModel {
+    string guid = 1;
     string title = 2;
-    string description = 3;
+    bool isCompleted = 3;
+    string dueDate = 4;
+    sint32 priority = 5;
+    string listGuid = 6;
+    google.protobuf.StringValue categoryGuid = 7;
+    google.protobuf.StringValue description = 8;
 }
 
 message GrpcResponse {
-    repeated GrpcQuestionModel question = 1;
+    repeated GrpcToDoItemModel toDoItem = 1;
 }

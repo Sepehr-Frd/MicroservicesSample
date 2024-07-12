@@ -12,11 +12,10 @@ public class UnitOfWork : IUnitOfWork
     private IBaseRepository<Person>? _personRepository;
 
     private IBaseRepository<User>? _userRepository;
-    
-    private IBaseRepository<ToDoItem>? _toDoItemRepository;
-    
-    private IBaseRepository<ToDoList>? _toDoListRepository;
 
+    private IBaseRepository<ToDoItem>? _toDoItemRepository;
+
+    private IBaseRepository<ToDoList>? _toDoListRepository;
 
     private readonly ToDoListManagerDbContext _dbDbContext;
 
@@ -24,22 +23,22 @@ public class UnitOfWork : IUnitOfWork
     {
         _dbDbContext = dbDbContext;
     }
-    
+
     public IBaseRepository<Category> CategoryRepository =>
-        _categoryRepository ??= new CategoryRepository();
-    
+        _categoryRepository ??= new CategoryRepository(_dbDbContext);
+
     public IBaseRepository<Person> PersonRepository =>
         _personRepository ??= new PersonRepository(_dbDbContext);
+
+    public IBaseRepository<ToDoItem> ToDoItemRepository =>
+        _toDoItemRepository ??= new ToDoItemRepository(_dbDbContext);
+
+    public IBaseRepository<ToDoList> ToDoListRepository =>
+        _toDoListRepository ??= new ToDoListRepository(_dbDbContext);
 
     public IBaseRepository<User> UserRepository =>
-        _userRepository ??= new UserRepository(_dbDbContext, _sieveProcessor);
+        _userRepository ??= new UserRepository(_dbDbContext);
 
-    public IBaseRepository<Person> PersonRepository =>
-        _personRepository ??= new PersonRepository(_dbDbContext);
-    
-    public IBaseRepository<Person> PersonRepository =>
-        _personRepository ??= new PersonRepository(_dbDbContext);
-    
     public async Task<int> CommitAsync(CancellationToken cancellationToken) =>
         await _dbDbContext.SaveChangesAsync(cancellationToken);
 }

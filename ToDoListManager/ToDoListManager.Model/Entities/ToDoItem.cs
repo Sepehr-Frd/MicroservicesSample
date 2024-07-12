@@ -3,7 +3,7 @@ using ToDoListManager.Model.Enums;
 
 namespace ToDoListManager.Model.Entities;
 
-public class ToDoItem : BaseEntityWithGuid
+public class ToDoItem : BaseEntity
 {
     public required string Title { get; init; }
 
@@ -15,11 +15,11 @@ public class ToDoItem : BaseEntityWithGuid
 
     public Priority Priority { get; init; }
 
-    public int ToDoListId { get; init; }
+    public required long ToDoListId { get; set; }
 
     public ToDoList? ToDoList { get; init; }
 
-    public int CategoryId { get; init; }
+    public long? CategoryId { get; set; }
 
     public Category? Category { get; init; }
 }

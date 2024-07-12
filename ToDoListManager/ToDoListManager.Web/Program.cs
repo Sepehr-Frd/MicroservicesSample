@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Settings.Configuration;
+using ToDoListManager.Common.Helpers;
 using ToDoListManager.DataAccess.Context;
 using ToDoListManager.Services.Grpc;
 using ToDoListManager.Web;
-using Serilog;
-using Serilog.Settings.Configuration;
+using ToDoListManager.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,8 +44,8 @@ try
         .InjectApi()
         .InjectCors()
         .InjectSwagger()
+        .AddHttpContextAccessor()
         .InjectUnitOfWork()
-        .InjectSieve()
         .InjectSerilog(builder.Configuration)
         .InjectAuthentication()
         .InjectContext(builder.Configuration, builder.Environment)
@@ -52,6 +54,8 @@ try
         .InjectRabbitMq()
         .InjectGrpc()
         .AddHealthChecks();
+
+    MapperHelper.RegisterMapperConfigurations();
 
     var app = builder.Build();
 
@@ -75,6 +79,7 @@ try
     }
 
     app
+        .UseMiddleware<CustomExceptionMiddleware>()
         //.UseHttpsRedirection()
         .UseCors("AllowAnyOrigin")
         .UseRouting()
@@ -85,7 +90,12 @@ try
             endpoints.MapControllers();
             endpoints.MapHealthChecks("/healthcheck");
             endpoints.MapGrpcService<GrpcService>();
-            endpoints.MapGet("/protos/ToDoListManager.proto", async httpContext => { await httpContext.Response.WriteAsync(File.ReadAllText("../ToDoListManager.Model/Protos/ToDoListManager.proto")); });
+            endpoints.MapGet("/protos/ToDoListManager.proto", async httpContext =>
+            {
+                await httpContext
+                    .Response
+                    .WriteAsync(File.ReadAllText("../ToDoListManager.Model/Protos/ToDoListManager.proto"));
+            });
         });
     await app.RunAsync();
 }
@@ -98,5 +108,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-
-public partial class Program;

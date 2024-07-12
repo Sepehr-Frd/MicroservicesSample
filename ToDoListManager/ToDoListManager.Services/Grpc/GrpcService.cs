@@ -8,29 +8,24 @@ namespace ToDoListManager.Services.Grpc;
 
 public class GrpcService : ToDoListManagerGrpc.ToDoListManagerGrpcBase
 {
-    private readonly QuestionRepository? _questionRepository;
+    private readonly ToDoItemRepository _toDoItemRepository;
 
     public GrpcService(IServiceScopeFactory serviceScopeFactory)
     {
         var unitOfWork = serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-        _questionRepository = (QuestionRepository)unitOfWork.QuestionRepository!;
+        _toDoItemRepository = (ToDoItemRepository)unitOfWork.ToDoItemRepository;
     }
 
-    public async override Task<GrpcResponse?> GetAllQuestions(GetAllRequest request, ServerCallContext context)
+    public async Task<GrpcResponse?> GetAllToDoItems(GetAllRequest request, ServerCallContext context, CancellationToken cancellationToken = default)
     {
-        if (_questionRepository is null)
-        {
-            return null;
-        }
-
         var response = new GrpcResponse();
 
-        var questions = await _questionRepository.GetAllAsync();
+        var toDoItems = await _toDoItemRepository.GetAllToDoItemsWithoutPaginationAsync(cancellationToken);
 
-        var questionDtos = questions.Adapt<List<GrpcQuestionModel>>();
+        var toDoItemDtos = toDoItems.Adapt<List<GrpcToDoItemModel>>();
 
-        response.Question.AddRange(questionDtos);
+        response.ToDoItem.AddRange(toDoItemDtos);
 
         return response;
     }

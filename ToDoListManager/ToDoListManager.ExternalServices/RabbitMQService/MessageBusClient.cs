@@ -49,9 +49,9 @@ public sealed class MessageBusClient : IMessageBusClient
         }
     }
 
-    public void PublishNewQuestion(QuestionPublishedDto questionPublishedDto)
+    public void PublishNewToDoItem(ToDoItemPublishedDto toDoItemPublishedDto)
     {
-        var message = JsonSerializer.Serialize(questionPublishedDto);
+        var message = JsonSerializer.Serialize(toDoItemPublishedDto);
 
         if (_connection.IsOpen)
         {
@@ -72,12 +72,12 @@ public sealed class MessageBusClient : IMessageBusClient
             basicProperties: null,
             body: body);
 
-        _logger.Information("{Message} was sent over {ExchangeName} exchange", message, TriggerExchange);
+        _logger.Information("{0} was sent over {1} exchange", message, TriggerExchange);
     }
 
     private void RabbitMqConnectionShutdownEventHandler(object? sender, ShutdownEventArgs shutdownEventArgs)
     {
-        _logger.Information("RabbitMQ connection was shutdown by {Sender}", sender);
+        _logger.Information("RabbitMQ connection was shutdown by {0}", sender);
     }
 
     public void Dispose()

@@ -2,7 +2,7 @@
 
 namespace ToDoListManager.Model.Entities;
 
-public class Person : BaseEntityWithGuid
+public class Person : BaseEntity
 {
     public string? FirstName { get; init; }
 

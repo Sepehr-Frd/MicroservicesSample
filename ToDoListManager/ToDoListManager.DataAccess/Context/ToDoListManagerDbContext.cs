@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
 using ToDoListManager.Common.Helpers;
-using ToDoListManager.Common.Constants;
 using ToDoListManager.Model.Entities;
 using ToDoListManager.Model.Enums;
 using Person = ToDoListManager.Model.Entities.Person;
@@ -18,7 +17,7 @@ public class ToDoListManagerDbContext : DbContext
 
     public DbSet<Person>? Persons { get; init; }
 
-    public DbSet<ToDoItem>? ToDoItems { get; set; }
+    public DbSet<ToDoItem>? ToDoItems { get; init; }
 
     public DbSet<ToDoList>? ToDoLists { get; init; }
 
@@ -69,6 +68,7 @@ public class ToDoListManagerDbContext : DbContext
             .RuleFor(user => user.Id, _ => id)
             .RuleFor(user => user.Username, faker => faker.Internet.UserName())
             .RuleFor(user => user.PasswordHash, faker => faker.Internet.Password().GetHashStringAsync().Result)
+            .RuleFor(user => user.Email, faker => faker.Internet.Email())
             .RuleFor(user => user.PersonId, _ => id++);
 
         var fakeUsers = new List<User>();
@@ -167,44 +167,57 @@ public class ToDoListManagerDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.Entity<Category>().HasKey(category => category.Id);
         modelBuilder.Entity<User>().HasKey(user => user.Id);
         modelBuilder.Entity<Person>().HasKey(person => person.Id);
         modelBuilder.Entity<ToDoItem>().HasKey(toDoItem => toDoItem.Id);
         modelBuilder.Entity<ToDoList>().HasKey(toDoList => toDoList.Id);
-        
+
         // [Index Configuration]
-        
+
         modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
 
         // [Relationship Configuration]
 
-        modelBuilder.Entity<User>()
-            .HasOne<Person>(user => user.Person)
+        modelBuilder
+            .Entity<User>()
+            .HasOne(user => user.Person)
             .WithOne(person => person.User)
-            .HasForeignKey<User>(user => user.PersonId);
+            .HasForeignKey<User>(user => user.PersonId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<ToDoList>()
-            .HasOne<User>(toDoList => toDoList.User)
+        modelBuilder
+            .Entity<ToDoList>()
+            .HasOne(toDoList => toDoList.User)
             .WithMany(user => user.ToDoLists)
-            .HasForeignKey(toDoList => toDoList.UserId);
+            .HasForeignKey(toDoList => toDoList.UserId)
+            .HasPrincipalKey(user => user.Id)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<ToDoItem>()
-            .HasOne<ToDoList>(toDoItem => toDoItem.ToDoList)
+        modelBuilder
+            .Entity<ToDoItem>()
+            .HasOne(toDoItem => toDoItem.ToDoList)
             .WithMany(toDoList => toDoList.ToDoItems)
-            .HasForeignKey(toDoItem => toDoItem.ToDoListId);
+            .HasForeignKey(toDoItem => toDoItem.ToDoListId)
+            .HasPrincipalKey(toDoList => toDoList.Id)
+            .OnDelete(DeleteBehavior.Cascade);
 
-
-        modelBuilder.Entity<ToDoItem>()
-            .HasOne<Category>(toDoItem => toDoItem.Category)
+        modelBuilder
+            .Entity<ToDoItem>()
+            .HasOne(toDoItem => toDoItem.Category)
             .WithMany(category => category.ToDoItems)
-            .HasForeignKey(toDoItem => toDoItem.CategoryId);
+            .HasForeignKey(toDoItem => toDoItem.CategoryId)
+            .HasPrincipalKey(category => category.Id)
+            .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity<Category>()
-            .HasOne<User>(category => category.User)
+        modelBuilder
+            .Entity<Category>()
+            .HasOne(category => category.User)
             .WithMany(user => user.Categories)
-            .HasForeignKey(category => category.UserId);
+            .HasForeignKey(category => category.UserId)
+            .HasPrincipalKey(user => user.Id)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // [Seed Data]
 

@@ -6,15 +6,15 @@ public interface IUnitOfWork
 {
     // [Properties]
 
-    IBaseRepository<Answer>? AnswerRepository { get; }
+    public IBaseRepository<Category> CategoryRepository { get; }
 
-    IBaseRepository<Person>? PersonRepository { get; }
+    public IBaseRepository<Person> PersonRepository { get; }
 
-    IBaseRepository<Question>? QuestionRepository { get; }
+    public IBaseRepository<ToDoItem> ToDoItemRepository { get; }
 
-    IBaseRepository<Role>? RoleRepository { get; }
+    public IBaseRepository<ToDoList> ToDoListRepository { get; }
 
-    IBaseRepository<User>? UserRepository { get; }
+    public IBaseRepository<User> UserRepository { get; }
 
     // [Methods]
 

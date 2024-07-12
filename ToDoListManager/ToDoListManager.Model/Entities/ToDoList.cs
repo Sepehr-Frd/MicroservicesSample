@@ -2,15 +2,15 @@ using ToDoListManager.Model.BaseEntities;
 
 namespace ToDoListManager.Model.Entities;
 
-public class ToDoList : BaseEntityWithGuid
+public class ToDoList : BaseEntity
 {
     public required string Name { get; init; }
 
     public string? Description { get; init; }
 
-    public int UserId { get; init; }
+    public required long UserId { get; set; }
 
     public User? User { get; init; }
 
-    public ICollection<ToDoItem>? ToDoItems { get; init; }
+    public ICollection<ToDoItem> ToDoItems { get; init; } = [];
 }

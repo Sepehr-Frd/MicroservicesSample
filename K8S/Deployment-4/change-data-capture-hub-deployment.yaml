@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: change-data-capture-hub-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dataselector
+  template:
+    metadata:
+      labels:
+        app: dataselector
+    spec:
+      containers:
+        - name: dataselector
+          image: local/change-data-capture-hub-web:1.0
+          resources:
+            limits:
+              memory: "250Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: change-data-capture-hub-clusterip-service
+spec:
+  type: ClusterIP
+  selector:
+    app: dataselector
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+    - name: https
+      protocol: TCP
+      port: 443

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoListManager.Business.Contracts;
 using ToDoListManager.Common.Dtos;
+using ToDoListManager.Model.Entities;
 
 namespace ToDoListManager.Api.Controllers;
 
@@ -37,6 +38,12 @@ public class ToDoItemController : ControllerBase
         return StatusCode((int)result.HttpStatusCode, result);
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("all-to-do-items")]
+    public async Task<List<ToDoItem>> GetToDoItemsByListIdAsync(CancellationToken cancellationToken) =>
+        await _toDoItemBusiness.GetAllToDoItemsWithoutPaginationAsync(cancellationToken);
+    
     [HttpPost]
     public async Task<ActionResult<CustomResponse<ToDoItemDto?>>> CreateToDoItemAsync(ToDoItemDto toDoItemDto, CancellationToken cancellationToken)
     {

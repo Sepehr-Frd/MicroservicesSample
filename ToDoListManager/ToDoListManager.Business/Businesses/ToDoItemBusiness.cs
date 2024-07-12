@@ -6,6 +6,7 @@ using ToDoListManager.Business.Contracts;
 using ToDoListManager.Common.Constants;
 using ToDoListManager.Common.Dtos;
 using ToDoListManager.DataAccess.Contracts;
+using ToDoListManager.DataAccess.Repositories;
 using ToDoListManager.Model.Entities;
 
 namespace ToDoListManager.Business.Businesses;
@@ -241,4 +242,7 @@ public class ToDoItemBusiness : IToDoItemBusiness
                 MessageConstants.SuccessfullyDeleted,
                 nameof(ToDoItem).Humanize(LetterCasing.Title)));
     }
+
+    public async Task<List<ToDoItem>> GetAllToDoItemsWithoutPaginationAsync(CancellationToken cancellationToken = default) =>
+        await ((ToDoItemRepository)_toDoItemRepository).GetAllToDoItemsWithoutPaginationAsync(cancellationToken);
 }

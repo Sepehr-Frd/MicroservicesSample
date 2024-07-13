@@ -14,6 +14,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: todo-list-manager-clusterip-service
+                name: to-do-list-manager-clusterip-service
                 port:
                   number: 80

@@ -6,14 +6,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dataselector
+      app: change-data-capture-hub
   template:
     metadata:
       labels:
-        app: dataselector
+        app: change-data-capture-hub
     spec:
       containers:
-        - name: dataselector
+        - name: change-data-capture-hub
           image: local/change-data-capture-hub-web:1.0
           resources:
             limits:
@@ -27,7 +27,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: dataselector
+    app: change-data-capture-hub
   ports:
     - name: http
       protocol: TCP

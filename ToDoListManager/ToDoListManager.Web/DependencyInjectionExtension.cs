@@ -106,5 +106,5 @@ internal static class DependencyInjectionExtension
         services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
     internal static IServiceCollection InjectGrpc(this IServiceCollection services) =>
-        services.AddGrpc(configure => { configure.EnableDetailedErrors = true; }).Services;
+        services.AddGrpc(configure => configure.EnableDetailedErrors = true).Services;
 }

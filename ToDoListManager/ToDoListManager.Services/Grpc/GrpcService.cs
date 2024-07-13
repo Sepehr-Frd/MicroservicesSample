@@ -17,11 +17,11 @@ public class GrpcService : ToDoListManagerGrpc.ToDoListManagerGrpcBase
         _toDoItemRepository = (ToDoItemRepository)unitOfWork.ToDoItemRepository;
     }
 
-    public async Task<GrpcResponse?> GetAllToDoItems(GetAllRequest request, ServerCallContext context, CancellationToken cancellationToken = default)
+    public async override Task<GrpcResponse?> GetAllToDoItems(GetAllRequest request, ServerCallContext context)
     {
         var response = new GrpcResponse();
 
-        var toDoItems = await _toDoItemRepository.GetAllToDoItemsWithoutPaginationAsync(cancellationToken);
+        var toDoItems = await _toDoItemRepository.GetAllToDoItemsWithoutPaginationAsync();
 
         var toDoItemDtos = toDoItems.Adapt<List<GrpcToDoItemModel>>();
 

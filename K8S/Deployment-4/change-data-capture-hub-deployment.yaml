@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: change-data-capture-hub
-          image: local/change-data-capture-hub-web:1.0
+          image: <-- ChangeDataCaptureHub Application Docker Image Name with Tag -->
           resources:
             limits:
               memory: "250Mi"

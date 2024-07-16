@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: mssql
-          image: local/mssql/server:2022
+          image: mcr.microsoft.com/azure-sql-edge:latest
           resources:
             limits:
               memory: "2048Mi"

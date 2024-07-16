@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: to-do-list-manager
-          image: local/to-do-list-manager-web:1.0
+          image: <-- ToDoListManager Application Docker Image Name with Tag -->
           resources:
             limits:
               memory: "250Mi"

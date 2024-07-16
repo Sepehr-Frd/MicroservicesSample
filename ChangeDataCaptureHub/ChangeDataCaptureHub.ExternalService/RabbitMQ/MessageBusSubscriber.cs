@@ -62,7 +62,7 @@ public sealed class MessageBusSubscriber : BackgroundService
 
         consumer.Received += async (_, eventArgument) =>
         {
-            Console.WriteLine("Event Received!");
+            Console.WriteLine("Event received.");
 
             var body = eventArgument.Body;
 

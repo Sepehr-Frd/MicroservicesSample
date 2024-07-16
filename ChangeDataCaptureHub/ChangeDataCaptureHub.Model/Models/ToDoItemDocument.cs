@@ -15,6 +15,6 @@ public class ToDoItemDocument : BaseDocument
     public Priority Priority { get; init; }
 
     public Guid ToDoListGuid { get; init; }
-    
+
     public Guid? CategoryGuid { get; init; }
 }

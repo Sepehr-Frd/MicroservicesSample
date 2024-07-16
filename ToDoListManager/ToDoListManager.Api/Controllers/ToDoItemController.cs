@@ -43,7 +43,7 @@ public class ToDoItemController : ControllerBase
     [Route("all-to-do-items")]
     public async Task<List<ToDoItem>> GetToDoItemsByListIdAsync(CancellationToken cancellationToken) =>
         await _toDoItemBusiness.GetAllToDoItemsWithoutPaginationAsync(cancellationToken);
-    
+
     [HttpPost]
     public async Task<ActionResult<CustomResponse<ToDoItemDto?>>> CreateToDoItemAsync(ToDoItemDto toDoItemDto, CancellationToken cancellationToken)
     {

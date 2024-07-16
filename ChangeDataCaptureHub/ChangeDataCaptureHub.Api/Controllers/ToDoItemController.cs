@@ -1,6 +1,7 @@
 ﻿using ChangeDataCaptureHub.Business.Businesses;
 using ChangeDataCaptureHub.ExternalService.ToDoListManager;
 using ChangeDataCaptureHub.Model.Models;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeDataCaptureHub.Api.Controllers;
@@ -29,7 +30,22 @@ public class ToDoItemController : BaseController<ToDoItemDocument>
             return NoContent();
         }
 
-        await _toDoItemBusiness.CreateManyAsync(toDoItems, cancellationToken);
+        var allToDoItems = await _toDoItemBusiness.GetAllAsync(cancellationToken);
+
+        var newEntities = toDoItems
+            .Where(toDoItem =>
+                !allToDoItems.Exists(toDoDocument =>
+                    toDoDocument.Title == toDoItem.Title &&
+                    toDoDocument.Description == toDoItem.Description));
+
+        if (!newEntities.Any())
+        {
+            return NoContent();
+        }
+
+        var newToDoItems = newEntities.Adapt<List<ToDoItemDocument>>();
+
+        await _toDoItemBusiness.CreateManyAsync(newToDoItems, cancellationToken);
 
         return Ok();
     }

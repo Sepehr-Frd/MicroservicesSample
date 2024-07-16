@@ -21,12 +21,12 @@ public class EventProcessor : IEventProcessor
     {
         var eventDto = JsonSerializer.Deserialize<ToDoItemPublishedDto>(message);
 
-        if (eventDto?.Event is GrpcEvent.EntityCreated)
+        if (eventDto?.EventType is GrpcEventType.EntityCreated)
         {
             await AddToDoItemAsync(message, cancellationToken);
         }
     }
-    
+
     private async Task AddToDoItemAsync(string toDoItemPublishedMessage, CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();

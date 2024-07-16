@@ -6,5 +6,5 @@ public class ToDoItemPublishedDto
 {
     public required ToDoItemDto ToDoItemDto { get; init; }
 
-    public GrpcEvent Event { get; init; }
+    public GrpcEventType EventType { get; init; }
 }

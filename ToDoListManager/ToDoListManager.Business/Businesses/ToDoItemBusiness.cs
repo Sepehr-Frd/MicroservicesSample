@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using ToDoListManager.Business.Contracts;
 using ToDoListManager.Common.Constants;
 using ToDoListManager.Common.Dtos;
+using ToDoListManager.Common.Enums;
 using ToDoListManager.DataAccess.Contracts;
 using ToDoListManager.DataAccess.Repositories;
+using ToDoListManager.ExternalService.RabbitMQService.Contracts;
 using ToDoListManager.Model.Entities;
 
 namespace ToDoListManager.Business.Businesses;
@@ -14,13 +16,15 @@ namespace ToDoListManager.Business.Businesses;
 public class ToDoItemBusiness : IToDoItemBusiness
 {
     private readonly IAuthBusiness _authBusiness;
+    private readonly IMessageBusClient _messageBusClient;
     private readonly IBaseRepository<ToDoItem> _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ToDoItemBusiness(IUnitOfWork unitOfWork, IAuthBusiness authBusiness)
+    public ToDoItemBusiness(IUnitOfWork unitOfWork, IAuthBusiness authBusiness, IMessageBusClient messageBusClient)
     {
         _unitOfWork = unitOfWork;
         _authBusiness = authBusiness;
+        _messageBusClient = messageBusClient;
         _toDoItemRepository = unitOfWork.ToDoItemRepository;
     }
 
@@ -141,6 +145,14 @@ public class ToDoItemBusiness : IToDoItemBusiness
         await _unitOfWork.CommitAsync(cancellationToken);
 
         var createdToDoItemDto = createdToDoItem.Adapt<ToDoItemDto>();
+
+        var toDoItemPublishedDto = new ToDoItemPublishedDto
+        {
+            ToDoItemDto = createdToDoItemDto,
+            Event = GrpcEvent.EntityCreated
+        };
+
+        _messageBusClient.PublishNewToDoItem(toDoItemPublishedDto);
 
         return CustomResponse<ToDoItemDto?>.CreateSuccessfulResponse(
             createdToDoItemDto,

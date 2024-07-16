@@ -28,6 +28,6 @@ using var serviceScope = app.Services.CreateScope();
 
 var serviceScopeFactory = serviceScope.ServiceProvider.GetRequiredService<IServiceScopeFactory>();
 
-await PrepareDatabase.PreparePopulationAsync(serviceScopeFactory);
+await SynchronizeDatabase.FetchNewEntitiesAsync(serviceScopeFactory);
 
 app.Run();

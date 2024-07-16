@@ -15,6 +15,7 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:3-management
+          imagePullPolicy: IfNotPresent
           resources:
             limits:
               memory: "512Mi"

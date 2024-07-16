@@ -27,11 +27,7 @@ public class ToDoListManagerRestService
 
         var restResponse = await restClient.ExecuteGetAsync(restRequest, cancellationToken);
 
-        var deserializedResponse = await Task.Factory
-            .StartNew(() =>
-                    JsonConvert.DeserializeObject<List<ToDoItemDto>>(
-                        restResponse.Content ?? ""),
-                cancellationToken);
+        var deserializedResponse = JsonConvert.DeserializeObject<List<ToDoItemDto>>(restResponse.Content ?? string.Empty);
 
         var toDoItems = deserializedResponse?.Adapt<List<ToDoItemDocument>>();
 

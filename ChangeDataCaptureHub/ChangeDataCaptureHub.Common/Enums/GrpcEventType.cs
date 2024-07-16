@@ -1,6 +1,6 @@
 namespace ChangeDataCaptureHub.Common.Enums;
 
-public enum GrpcEvent : byte
+public enum GrpcEventType : byte
 {
     EntityCreated = 0,
     EntityUpdated = 1,

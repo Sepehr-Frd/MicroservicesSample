@@ -9,7 +9,7 @@ using ChangeDataCaptureHub.Model.Models;
 
 namespace ChangeDataCaptureHub.Web;
 
-public static class DependencyInjectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection InjectControllers(this IServiceCollection services) => services.AddControllers().Services;
 

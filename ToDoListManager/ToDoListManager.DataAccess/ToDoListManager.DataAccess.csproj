@@ -18,13 +18,13 @@
         <ProjectReference Include="..\ToDoListManager.Model\ToDoListManager.Model.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.5.1" />
+        <PackageReference Include="Bogus" Version="35.6.0" />
         <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     </ItemGroup>
 </Project>

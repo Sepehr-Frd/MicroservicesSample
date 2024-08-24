@@ -15,7 +15,7 @@ using ToDoListManager.ExternalService.RabbitMQService.Contracts;
 
 namespace ToDoListManager.Web;
 
-internal static class DependencyInjectionExtension
+internal static class ServiceCollectionExtensions
 {
     internal static IServiceCollection InjectApi(this IServiceCollection services) =>
         services

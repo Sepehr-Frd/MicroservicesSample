@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <None Remove="Base\" />
-        <None Remove="Businesses\" />
-        <None Remove="Contracts\" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-      <PackageReference Include="Mapster" Version="7.4.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\ToDoListManager.Common\ToDoListManager.Common.csproj" />
-        <ProjectReference Include="..\ToDoListManager.DataAccess\ToDoListManager.DataAccess.csproj" />
-        <ProjectReference Include="..\ToDoListManager.ExternalServices\ToDoListManager.ExternalService.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="Base\"/>
+    <None Remove="Businesses\"/>
+    <None Remove="Contracts\"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.14.1"/>
+    <PackageReference Include="Mapster" Version="7.4.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ToDoListManager.Common\ToDoListManager.Common.csproj"/>
+    <ProjectReference Include="..\ToDoListManager.DataAccess\ToDoListManager.DataAccess.csproj"/>
+    <ProjectReference Include="..\ToDoListManager.ExternalServices\ToDoListManager.ExternalService.csproj"/>
+  </ItemGroup>
 </Project>

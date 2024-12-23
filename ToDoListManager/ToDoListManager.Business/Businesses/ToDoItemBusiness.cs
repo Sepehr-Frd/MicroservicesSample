@@ -152,7 +152,7 @@ public class ToDoItemBusiness : IToDoItemBusiness
             Event = GrpcEvent.EntityCreated
         };
 
-        _messageBusClient.PublishNewToDoItem(toDoItemPublishedDto);
+        await _messageBusClient.PublishNewToDoItemAsync(toDoItemPublishedDto);
 
         return CustomResponse<ToDoItemDto?>.CreateSuccessfulResponse(
             createdToDoItemDto,

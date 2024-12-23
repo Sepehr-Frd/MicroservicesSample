@@ -3,15 +3,19 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 using Serilog;
 using ToDoListManager.Business.Businesses;
 using ToDoListManager.Business.Contracts;
+using ToDoListManager.Common.Dtos;
+using ToDoListManager.Common.Helpers;
 using ToDoListManager.Common.Validations;
 using ToDoListManager.DataAccess;
 using ToDoListManager.DataAccess.Context;
 using ToDoListManager.DataAccess.Contracts;
 using ToDoListManager.ExternalService.RabbitMQService;
 using ToDoListManager.ExternalService.RabbitMQService.Contracts;
+using ToDoListManager.Model.Entities;
 
 namespace ToDoListManager.Web;
 
@@ -38,9 +42,6 @@ internal static class ServiceCollectionExtensions
             });
         });
 
-    internal static IServiceCollection InjectSwagger(this IServiceCollection services) =>
-        services.AddSwaggerGen();
-
     internal static IServiceCollection InjectUnitOfWork(this IServiceCollection services) =>
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -54,8 +55,15 @@ internal static class ServiceCollectionExtensions
 
         return services.AddDbContext<ToDoListManagerDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
-            options.EnableSensitiveDataLogging();
+            options
+                .UseSqlServer(configuration.GetConnectionString("SqlServer"))
+                .UseSeeding((dbContext, _) => dbContext.SeedDatabase())
+                .UseAsyncSeeding((dbContext, _, _) => Task.FromResult(dbContext.SeedDatabase()));
+
+            if (!environment.IsProduction())
+            {
+                options.EnableSensitiveDataLogging();
+            }
         });
     }
 
@@ -102,9 +110,81 @@ internal static class ServiceCollectionExtensions
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssemblyContaining<PersonValidator>();
 
-    internal static IServiceCollection InjectRabbitMq(this IServiceCollection services) =>
-        services.AddSingleton<IMessageBusClient, MessageBusClient>();
+    internal async static Task<IServiceCollection> InjectRabbitMqAsync(this IServiceCollection services, IConfiguration configuration)
+    {
+        var rabbitMqConfigurationDto = configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqConfigurationDto>()!;
+
+        var factory = new ConnectionFactory
+        {
+            HostName = rabbitMqConfigurationDto.Host,
+            Port = rabbitMqConfigurationDto.Port
+        };
+
+        var rabbitMqConnection = await factory.CreateConnectionAsync();
+
+        await using var rabbitMqChannel = await rabbitMqConnection.CreateChannelAsync();
+
+        await rabbitMqChannel.ExchangeDeclareAsync(rabbitMqConfigurationDto.TriggerExchangeName, type: ExchangeType.Fanout, true);
+        await rabbitMqChannel.QueueDeclareAsync(rabbitMqConfigurationDto.TriggerQueueName, true, false, false);
+
+        await rabbitMqChannel.QueueBindAsync(
+            rabbitMqConfigurationDto.TriggerQueueName,
+            rabbitMqConfigurationDto.TriggerExchangeName,
+            rabbitMqConfigurationDto.TriggerQueueName);
+
+        services
+            .AddSingleton(rabbitMqConnection)
+            .AddScoped<IMessageBusClient, MessageBusClient>();
+
+        return services;
+    }
 
     internal static IServiceCollection InjectGrpc(this IServiceCollection services) =>
         services.AddGrpc(configure => configure.EnableDetailedErrors = true).Services;
+
+    private static DbContext SeedDatabase(this DbContext dbContext)
+    {
+        if (dbContext.Set<User>().Any())
+        {
+            return dbContext;
+        }
+
+        const int fakePeopleCount = 1_000;
+        const int fakeUsersCount = 1_000;
+        const int fakeCategoriesCount = 1_000;
+        const int fakeToDoListsCount = 1_000;
+        const int fakeToDoItemsCount = 1_000;
+
+        var fakePeople = FakeDataHelper.GetFakePeople(fakePeopleCount);
+
+        dbContext.Set<Person>().AddRange(fakePeople);
+
+        dbContext.SaveChanges();
+
+        var fakeUsers = FakeDataHelper.GetFakeUsers(fakePeople, fakeUsersCount);
+
+        dbContext.Set<User>().AddRange(fakeUsers);
+
+        dbContext.SaveChanges();
+
+        var fakeCategories = FakeDataHelper.GetFakeCategories(fakeUsers, fakeCategoriesCount);
+
+        dbContext.Set<Category>().AddRange(fakeCategories);
+
+        dbContext.SaveChanges();
+
+        var fakeToDoLists = FakeDataHelper.GetFakeToDoLists(fakeUsers, fakeToDoListsCount);
+
+        dbContext.Set<ToDoList>().AddRange(fakeToDoLists);
+
+        dbContext.SaveChanges();
+
+        var fakeToDoItems = FakeDataHelper.GetFakeToDoItems(fakeToDoLists, fakeCategories, fakeToDoItemsCount);
+
+        dbContext.Set<ToDoItem>().AddRange(fakeToDoItems);
+
+        dbContext.SaveChanges();
+
+        return dbContext;
+    }
 }

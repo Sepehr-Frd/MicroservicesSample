@@ -59,7 +59,13 @@ public class ToDoListBusiness : IToDoListBusiness
             null,
             cancellationToken);
 
-        var toDoListDtos = toDoLists.Adapt<List<ToDoListDto>>();
+        var toDoListDtos = toDoLists.Adapt<List<ToDoListDto>>(
+            TypeAdapterConfig<ToDoList, ToDoListDto>
+                .NewConfig()
+                .Map(
+                    dest => dest.UserGuid,
+                    src => loggedInUser!.Guid)
+                .Config);
 
         return CustomResponse<List<ToDoListDto>?>.CreateSuccessfulResponse(toDoListDtos);
     }

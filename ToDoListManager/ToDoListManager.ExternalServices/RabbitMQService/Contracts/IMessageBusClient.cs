@@ -2,7 +2,7 @@
 
 namespace ToDoListManager.ExternalService.RabbitMQService.Contracts;
 
-public interface IMessageBusClient : IDisposable
+public interface IMessageBusClient
 {
-    void PublishNewToDoItem(ToDoItemPublishedDto toDoItemPublishedDto);
+    Task PublishNewToDoItemAsync(ToDoItemPublishedDto toDoItemPublishedDto);
 }

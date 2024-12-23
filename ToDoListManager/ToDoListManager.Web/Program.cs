@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Settings.Configuration;
 using ToDoListManager.Common.Helpers;
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 /*
  builder.WebHost.ConfigureKestrel(options =>
 {
-    // Setup a HTTP/2 endpoint without TLS.
+    // Set up an HTTP/2 endpoint without TLS.
 
     options.ListenLocalhost(6000, o => o.Protocols =
         HttpProtocols.Http2);
@@ -43,7 +44,7 @@ try
         .AddEndpointsApiExplorer()
         .InjectApi()
         .InjectCors()
-        .InjectSwagger()
+        .AddOpenApi()
         .AddHttpContextAccessor()
         .InjectUnitOfWork()
         .InjectSerilog(builder.Configuration)
@@ -51,9 +52,10 @@ try
         .InjectContext(builder.Configuration, builder.Environment)
         .InjectBusinesses()
         .InjectFluentValidation()
-        .InjectRabbitMq()
         .InjectGrpc()
         .AddHealthChecks();
+
+    await builder.Services.InjectRabbitMqAsync(builder.Configuration);
 
     MapperHelper.RegisterMapperConfigurations();
 
@@ -63,8 +65,8 @@ try
 
     await using var context = scope.ServiceProvider.GetRequiredService<ToDoListManagerDbContext>();
 
-    app.UseSwagger()
-        .UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 
     if (app.Environment.IsEnvironment("Testing"))
     {

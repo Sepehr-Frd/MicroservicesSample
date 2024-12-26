@@ -1,4 +1,5 @@
 ﻿using ChangeDataCaptureHub.Business.Businesses;
+using ChangeDataCaptureHub.Common.Dtos;
 using ChangeDataCaptureHub.DataAccess;
 using ChangeDataCaptureHub.DataAccess.Repositories;
 using ChangeDataCaptureHub.ExternalService.RabbitMQ;
@@ -6,6 +7,7 @@ using ChangeDataCaptureHub.ExternalService.RabbitMQ.EventProcessing;
 using ChangeDataCaptureHub.ExternalService.ToDoListManager;
 using ChangeDataCaptureHub.ExternalService.ToDoListManager.ToDoListManagerGrpcService;
 using ChangeDataCaptureHub.Model.Models;
+using RabbitMQ.Client;
 
 namespace ChangeDataCaptureHub.Web;
 
@@ -30,4 +32,36 @@ public static class ServiceCollectionExtensions
 
     internal static IServiceCollection InjectMessageBusSubscriber(this IServiceCollection services) =>
         services.AddHostedService<MessageBusSubscriber>();
+
+    internal async static Task<IServiceCollection> InjectRabbitMqAsync(this IServiceCollection services, IConfiguration configuration)
+    {
+        var rabbitMqConfigurationDto = configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqConfigurationDto>()!;
+
+        var factory = new ConnectionFactory
+        {
+            HostName = rabbitMqConfigurationDto.Host,
+            Port = rabbitMqConfigurationDto.Port
+        };
+
+        var rabbitMqConnection = await factory.CreateConnectionAsync();
+
+        await using var rabbitMqChannel = await rabbitMqConnection.CreateChannelAsync();
+
+        await rabbitMqChannel.ExchangeDeclareAsync(rabbitMqConfigurationDto.TriggerExchangeName, type: ExchangeType.Fanout, true);
+        await rabbitMqChannel.QueueDeclareAsync(rabbitMqConfigurationDto.TriggerQueueName, true, false, false);
+
+        await rabbitMqChannel.QueueBindAsync(
+            rabbitMqConfigurationDto.TriggerQueueName,
+            rabbitMqConfigurationDto.TriggerExchangeName,
+            rabbitMqConfigurationDto.TriggerQueueName);
+
+        Console.WriteLine("Listening on the Message Bus");
+
+        rabbitMqConnection.ConnectionShutdownAsync += async (sender, shutdownEventArgs) =>
+            await Console.Out.WriteLineAsync($"RabbitMQ connection was shutdown by {sender}, event args: {shutdownEventArgs}");
+
+        services.AddSingleton(rabbitMqConnection);
+
+        return services;
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ChangeDataCaptureHub.Common.Dtos;
 using ChangeDataCaptureHub.ExternalService.RabbitMQ.EventProcessing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -7,60 +8,28 @@ using RabbitMQ.Client.Events;
 
 namespace ChangeDataCaptureHub.ExternalService.RabbitMQ;
 
-public sealed class MessageBusSubscriber : BackgroundService
+public sealed class MessageBusSubscriber : BackgroundService, IAsyncDisposable
 {
-
-    private readonly IConfiguration _configuration;
-
+    private readonly IConnection _rabbitMqConnection;
     private readonly IEventProcessor _eventProcessor;
+    private readonly RabbitMqConfigurationDto _rabbitMqConfigurationDto;
 
-    private IConnection? _connection;
-
-    private IModel? _channel;
-
-    private string? _queueName;
-
-    private const string TriggerExchange = "trigger";
-
-    public MessageBusSubscriber(IConfiguration configuration, IEventProcessor eventProcessor)
+    public MessageBusSubscriber(IConnection rabbitMqConnection, IConfiguration configuration, IEventProcessor eventProcessor)
     {
-        _configuration = configuration;
-
         _eventProcessor = eventProcessor;
-
-        InitializeRabbitMq();
+        _rabbitMqConnection = rabbitMqConnection;
+        _rabbitMqConfigurationDto = configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqConfigurationDto>()!;
     }
 
-    private void InitializeRabbitMq()
+    protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var connectionFactory = new ConnectionFactory
-        {
-            HostName = _configuration.GetSection("RabbitMQ").GetValue<string>("RabbitMQHost"),
-            Port = _configuration.GetSection("RabbitMQ").GetValue<int>("RabbitMQPort")
-        };
+        await using var channel = await _rabbitMqConnection.CreateChannelAsync(cancellationToken: stoppingToken);
 
-        _connection = connectionFactory.CreateConnection();
-
-        _channel = _connection.CreateModel();
-
-        _channel.ExchangeDeclare(exchange: TriggerExchange, type: ExchangeType.Fanout);
-
-        _queueName = _channel.QueueDeclare().QueueName;
-
-        _channel.QueueBind(queue: _queueName, exchange: TriggerExchange, "");
-
-        Console.WriteLine("Listening on the Message Bus");
-
-        _connection.ConnectionShutdown += RabbitMqConnectionShutdownEventHandler;
-    }
-
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
-    {
         stoppingToken.ThrowIfCancellationRequested();
 
-        var consumer = new EventingBasicConsumer(_channel);
+        var consumer = new AsyncEventingBasicConsumer(channel);
 
-        consumer.Received += async (_, eventArgument) =>
+        consumer.ReceivedAsync += async (_, eventArgument) =>
         {
             Console.WriteLine("Event received.");
 
@@ -71,24 +40,20 @@ public sealed class MessageBusSubscriber : BackgroundService
             await _eventProcessor.ProcessEventAsync(notificationMessage, stoppingToken);
         };
 
-        _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
-
-        return Task.CompletedTask;
+        await channel.BasicConsumeAsync(
+            _rabbitMqConfigurationDto.TriggerQueueName,
+            true,
+            consumer,
+            cancellationToken: stoppingToken);
     }
 
-    private static void RabbitMqConnectionShutdownEventHandler(object? sender, ShutdownEventArgs shutdownEventArgs)
+    public async ValueTask DisposeAsync()
     {
-        Console.WriteLine($"RabbitMQ connection was shutdown by {sender}", shutdownEventArgs);
-    }
-
-    public override void Dispose()
-    {
-        if (_channel!.IsOpen)
+        if (_rabbitMqConnection.IsOpen)
         {
-            _channel.Close();
-            _connection!.Close();
+            await _rabbitMqConnection.CloseAsync();
         }
 
-        base.Dispose();
+        Dispose();
     }
 }

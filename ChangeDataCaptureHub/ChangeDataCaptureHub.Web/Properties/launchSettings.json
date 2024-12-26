@@ -11,7 +11,7 @@
     "ChangeDataCaptureHub.Web(Development)": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "scalar/v1",
       "applicationUrl": "https://localhost:7001;http://localhost:7000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
@@ -21,7 +21,7 @@
     "ChangeDataCaptureHub.Web(Production)": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "scalar/v1",
       "applicationUrl": "https://localhost:443;http://localhost:80",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
@@ -30,7 +30,7 @@
     "ChangeDataCaptureHub.Web(Testing)": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "scalar/v1",
       "applicationUrl": "https://localhost:7001;http://localhost:7000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Testing"

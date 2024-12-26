@@ -1,43 +1,43 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>20d491d6-90d3-4a4e-8371-968fdf9c36da</UserSecretsId>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <LangVersion>12</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>20d491d6-90d3-4a4e-8371-968fdf9c36da</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <LangVersion>12</LangVersion>
+  </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(RunConfiguration)' == 'ChangeDataCaptureHub.Web(Development)' "/>
-    <PropertyGroup Condition=" '$(RunConfiguration)' == 'ChangeDataCaptureHub.Web(Production)' "/>
-    <PropertyGroup Condition=" '$(RunConfiguration)' == 'ChangeDataCaptureHub.Web(Testing)' "/>
-    <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.27.3" />
-        <PackageReference Include="Grpc.Net.Client" Version="2.65.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.65.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Mapster" Version="7.4.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.2" />
-    </ItemGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ChangeDataCaptureHub.Web(Development)' "/>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ChangeDataCaptureHub.Web(Production)' "/>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ChangeDataCaptureHub.Web(Testing)' "/>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.29.2"/>
+    <PackageReference Include="Grpc.Net.Client" Version="2.67.0"/>
+    <PackageReference Include="Grpc.Tools" Version="2.68.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Mapster" Version="7.4.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0"/>
+    <PackageReference Include="Scalar.AspNetCore" Version="1.2.72" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\ChangeDataCaptureHub.ExternalService\ChangeDataCaptureHub.ExternalService.csproj" />
-        <ProjectReference Include="..\ChangeDataCaptureHub.Model\ChangeDataCaptureHub.Model.csproj">
-            <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-        </ProjectReference>
-        <ProjectReference Include="..\ChangeDataCaptureHub.DataAccess\ChangeDataCaptureHub.DataAccess.csproj">
-            <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-        </ProjectReference>
-        <ProjectReference Include="..\ChangeDataCaptureHub.Business\ChangeDataCaptureHub.Business.csproj">
-            <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-        </ProjectReference>
-        <ProjectReference Include="..\ChangeDataCaptureHub.Api\ChangeDataCaptureHub.Api.csproj">
-            <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-        </ProjectReference>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChangeDataCaptureHub.ExternalService\ChangeDataCaptureHub.ExternalService.csproj"/>
+    <ProjectReference Include="..\ChangeDataCaptureHub.Model\ChangeDataCaptureHub.Model.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\ChangeDataCaptureHub.DataAccess\ChangeDataCaptureHub.DataAccess.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\ChangeDataCaptureHub.Business\ChangeDataCaptureHub.Business.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\ChangeDataCaptureHub.Api\ChangeDataCaptureHub.Api.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

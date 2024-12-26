@@ -1,11 +1,12 @@
 using ChangeDataCaptureHub.ExternalService.ToDoListManager.ToDoListManagerGrpcService;
 using ChangeDataCaptureHub.Web;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen()
+    .AddOpenApi()
     .InjectDatabaseSettings(builder.Configuration)
     .InjectRepositories()
     .InjectBusinesses()
@@ -13,10 +14,12 @@ builder.Services
     .InjectExternalServices()
     .InjectMessageBusSubscriber();
 
+await builder.Services.InjectRabbitMqAsync(builder.Configuration);
+
 var app = builder.Build();
 
-app.UseSwagger()
-    .UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseRouting();
 

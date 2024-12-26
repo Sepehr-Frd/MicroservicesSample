@@ -99,6 +99,7 @@ try
                     .WriteAsync(File.ReadAllText("../ToDoListManager.Model/Protos/ToDoListManager.proto"));
             });
         });
+
     await app.RunAsync();
 }
 catch (Exception exception)

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: rabbitmq:3.13.7-management
+          image: rabbitmq:management
           imagePullPolicy: IfNotPresent
           resources:
             limits:

@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
         - name: mongodb
-          image: mongo:6.0.8
+          image: mongo:latest
           imagePullPolicy: IfNotPresent
           resources:
             limits:
-              memory: '512Mi'
-              cpu: '500m'
+              memory: "512Mi"
+              cpu: "500m"
           ports:
             - containerPort: 27017
       volumes:

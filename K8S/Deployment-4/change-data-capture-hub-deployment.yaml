@@ -14,11 +14,36 @@ spec:
     spec:
       containers:
         - name: change-data-capture-hub
-          image: <-- ChangeDataCaptureHub Application Docker Image Name with Tag -->
+          image: local/change-data-capture-hub-web:1.0.0
           resources:
             limits:
               memory: "250Mi"
               cpu: "500m"
+          env:
+            - name: AllowedHosts
+              value: "*"
+            - name: Logging__LogLevel__Default
+              value: "Warning"
+            - name: Logging__LogLevel__Microsoft.AspNetCore
+              value: "Warning"
+            - name: MongoDb__ConnectionString
+              value: "mongodb://mongodb-clusterip-service:27017"
+            - name: MongoDb__DatabaseName
+              value: "ChangeDataCaptureHub"
+            - name: MongoDb__CollectionName
+              value: "ToDoItems"
+            - name: RabbitMqConfiguration__Host
+              value: "rabbitmq-clusterip-service"
+            - name: RabbitMqConfiguration__Port
+              value: "5672"
+            - name: RabbitMqConfiguration__TriggerExchangeName
+              value: "trigger"
+            - name: RabbitMqConfiguration__TriggerQueueName
+              value: "trigger"
+            - name: ToDoListManagerGrpc
+              value: "http://to-do-list-manager-clusterip-service:666"
+            - name: ToDoListManagerRestBaseAddress
+              value: "http://to-do-list-manager-clusterip-service:80/api"
 ---
 apiVersion: v1
 kind: Service

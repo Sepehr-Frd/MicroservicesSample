@@ -14,11 +14,59 @@ spec:
     spec:
       containers:
         - name: to-do-list-manager
-          image: <-- ToDoListManager Application Docker Image Name with Tag -->
+          image: local/to-do-list-manager-web:1.0.0
           resources:
             limits:
               memory: "250Mi"
               cpu: "250m"
+          env:
+            - name: AllowedHosts
+              value: "*"
+            - name: Serilog__MinimumLevel__Default
+              value: "Warning"
+            - name: Serilog__WriteTo__0__Name
+              value: "MongoDBBson"
+            - name: Serilog__WriteTo__0__Args__databaseUrl
+              value: "mongodb://mongodb-clusterip-service:27017/ToDoListManager"
+            - name: Serilog__WriteTo__0__Args__collectionName
+              value: "ProductionLogs"
+            - name: Serilog__WriteTo__0__Args__cappedMaxSizeMb
+              value: "1024"
+            - name: Serilog__WriteTo__0__Args__cappedMaxDocuments
+              value: "50000"
+            - name: Serilog__WriteTo__0__Args__rollingInterval
+              value: "Day"
+            - name: Serilog__WriteTo__0__Args__formatter
+              value: "Serilog.Formatting.Json.JsonFormatter"
+            - name: Serilog__Enrich__0
+              value: "FromLogContext"
+            - name: Serilog__Enrich__1
+              value: "WithMachineName"
+            - name: SqlServerConfiguration__ConnectionString
+              value: "Data Source=mssql-clusterip-service,1433;Initial Catalog=ToDoListManager;User Id={0};Password={1};Trust Server Certificate=True;Encrypt=False"
+            - name: SqlServerConfiguration__UserId
+              value: "sa"
+            - name: SqlServerConfiguration__Password
+              valueFrom:
+                secretKeyRef:
+                  name: mssql
+                  key: "SQL_SERVER_PASSWORD"
+            - name: RabbitMqConfiguration__Host
+              value: "rabbitmq-clusterip-service"
+            - name: RabbitMqConfiguration__Port
+              value: "5672"
+            - name: RabbitMqConfiguration__TriggerExchangeName
+              value: "trigger"
+            - name: RabbitMqConfiguration__TriggerQueueName
+              value: "trigger"
+            - name: Kestrel__Endpoints__Grpc__Protocols
+              value: "Http2"
+            - name: Kestrel__Endpoints__Grpc__Url
+              value: "http://to-do-list-manager-clusterip-service:666"
+            - name: Kestrel__Endpoints__webApi__Protocols
+              value: "Http1"
+            - name: Kestrel__Endpoints__webApi__Url
+              value: "http://to-do-list-manager-clusterip-service:80"
 ---
 apiVersion: v1
 kind: Service

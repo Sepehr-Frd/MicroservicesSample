@@ -53,10 +53,14 @@ internal static class ServiceCollectionExtensions
             return services.AddDbContext<ToDoListManagerDbContext>(options => options.UseInMemoryDatabase("ToDoListManager"));
         }
 
+        var sqlServerConfigurationDto = configuration.GetSection("SqlServerConfiguration").Get<SqlServerConfigurationDto>()!;
+
+        var connectionString = string.Format(sqlServerConfigurationDto.ConnectionString, sqlServerConfigurationDto.UserId, sqlServerConfigurationDto.Password);
+
         return services.AddDbContext<ToDoListManagerDbContext>(options =>
         {
             options
-                .UseSqlServer(configuration.GetConnectionString("SqlServer"))
+                .UseSqlServer(connectionString)
                 .UseSeeding((dbContext, _) => dbContext.SeedDatabase())
                 .UseAsyncSeeding((dbContext, _, _) => Task.FromResult(dbContext.SeedDatabase()));
 

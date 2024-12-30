@@ -8,7 +8,7 @@ using RabbitMQ.Client.Events;
 
 namespace ChangeDataCaptureHub.ExternalService.RabbitMQ;
 
-public sealed class MessageBusSubscriber : BackgroundService, IAsyncDisposable
+public sealed class MessageBusSubscriber : BackgroundService
 {
     private readonly IConnection _rabbitMqConnection;
     private readonly IEventProcessor _eventProcessor;
@@ -23,7 +23,7 @@ public sealed class MessageBusSubscriber : BackgroundService, IAsyncDisposable
 
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await using var channel = await _rabbitMqConnection.CreateChannelAsync(cancellationToken: stoppingToken);
+        var channel = await _rabbitMqConnection.CreateChannelAsync(cancellationToken: stoppingToken);
 
         stoppingToken.ThrowIfCancellationRequested();
 
@@ -45,15 +45,5 @@ public sealed class MessageBusSubscriber : BackgroundService, IAsyncDisposable
             true,
             consumer,
             cancellationToken: stoppingToken);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_rabbitMqConnection.IsOpen)
-        {
-            await _rabbitMqConnection.CloseAsync();
-        }
-
-        Dispose();
     }
 }

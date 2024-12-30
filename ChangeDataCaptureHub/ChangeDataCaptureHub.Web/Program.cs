@@ -1,5 +1,8 @@
 using ChangeDataCaptureHub.ExternalService.ToDoListManager.ToDoListManagerGrpcService;
 using ChangeDataCaptureHub.Web;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,8 @@ builder.Services
     .InjectControllers()
     .InjectExternalServices()
     .InjectMessageBusSubscriber();
+
+BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 await builder.Services.InjectRabbitMqAsync(builder.Configuration);
 

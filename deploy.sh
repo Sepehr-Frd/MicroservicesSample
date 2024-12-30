@@ -1,17 +1,10 @@
 #!/bin/bash
 
-set -e  # Exit immediately if a command exits with a non-zero status
-set -o pipefail  # Prevents errors in a pipeline from being masked
-
-echo "Building Docker images..."
-
-cd ./ToDoListManager
-docker build -t local/to-do-list-manager-web:1.0.0 --file Dockerfile .
-cd ..
-
-cd ./ChangeDataCaptureHub
-docker build -t local/change-data-capture-hub-web:1.0.0 --file Dockerfile .
-cd ..
+# Function to get the pod name
+get_pod_name() {
+  local deployment_name=$1
+  kubectl get pods --selector=app=mssql -o jsonpath='{.items[0].metadata.name}'
+}
 
 # Function to check if RabbitMQ is ready
 check_rabbitmq() {
@@ -32,11 +25,23 @@ check_rabbitmq() {
 # Function to check if SQL Server is ready
 check_sqlserver() {
   local service_name=$1
-  local host=$2
-  local port=$3
-  echo "Checking $service_name at $host:$port..."
-  
-  while ! nc -z "$host" "$port"; do
+  local deployment_name=$2
+  local host=$3
+  local port=$4
+  local username=$5
+  local password=$6
+
+  echo "Fetching the pod name for deployment $deployment_name..."
+  local pod_name=$(get_pod_name $deployment_name)
+
+  if [ -z "$pod_name" ]; then
+    echo "Error: Unable to find a pod for deployment $deployment_name"
+    exit 1
+  fi
+
+  echo "Checking $service_name in pod $pod_name at $host:$port..."
+
+  while ! kubectl exec -it $pod_name -- /opt/mssql-tools18/bin/sqlcmd -S $host,$port -U $username -P $password -C -t 60 -Q "SELECT @@VERSION" >/dev/null 2>&1; do
     echo "$service_name is not ready. Retrying in 5 seconds..."
     sleep 5
   done
@@ -97,6 +102,19 @@ wait_for_http() {
   echo "$service_name is ready!"
 }
 
+set -e  # Exit immediately if a command exits with a non-zero status
+set -o pipefail  # Prevents errors in a pipeline from being masked
+
+echo "Building Docker images..."
+
+cd ./ToDoListManager
+docker build -t local/to-do-list-manager-web:1.0.0 --file Dockerfile .
+cd ..
+
+cd ./ChangeDataCaptureHub
+docker build -t local/change-data-capture-hub-web:1.0.0 --file Dockerfile .
+cd ..
+
 echo "Dependencies are ready. Applying Kubernetes deployments..."
 
 # Apply Kubernetes deployments
@@ -109,12 +127,10 @@ echo "Checking dependencies..."
 check_rabbitmq "RabbitMQ" "localhost" 15672 "guest" "guest"
 
 # Wait for SQL Server
-check_sqlserver "SQL Server" "localhost" "1433"
+check_sqlserver "SQL Server" "mssql" "localhost" "1433" "sa" "YourSAP@55word"
 
 # Wait for MongoDB
 check_mongodb "MongoDB" "localhost" 27017
-
-sleep 10
 
 kubectl apply -f ./K8S/Deployment-3
 

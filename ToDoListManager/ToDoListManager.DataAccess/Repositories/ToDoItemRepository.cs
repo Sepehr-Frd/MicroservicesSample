@@ -15,5 +15,9 @@ public class ToDoItemRepository : BaseRepository<ToDoItem>
     }
 
     public async Task<List<ToDoItem>> GetAllToDoItemsWithoutPaginationAsync(CancellationToken cancellationToken = default) =>
-        await _dbContext.ToDoItems!.ToListAsync(cancellationToken);
+        await _dbContext
+            .ToDoItems!
+            .Include(toDoItem => toDoItem.ToDoList)
+            .Include(toDoItem => toDoItem.Category)
+            .ToListAsync(cancellationToken);
 }

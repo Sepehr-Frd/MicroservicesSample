@@ -27,8 +27,9 @@ public class ToDoListManagerDataClient(IConfiguration configuration) : IToDoList
 
         try
         {
-            var reply = client.GetAllToDoItems(request);
-            return reply.ToDoItem.Adapt<IEnumerable<ToDoItemDto>>();
+            var grpcResponse = client.GetAllToDoItems(request);
+
+            return grpcResponse.ToDoItem.Adapt<IEnumerable<ToDoItemDto>>();
         }
         catch (Exception exception)
         {

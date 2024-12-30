@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using ToDoListManager.Common.Dtos;
 using ToDoListManager.DataAccess.Contracts;
 using ToDoListManager.DataAccess.Repositories;
 
@@ -23,9 +24,11 @@ public class GrpcService : ToDoListManagerGrpc.ToDoListManagerGrpcBase
 
         var toDoItems = await _toDoItemRepository.GetAllToDoItemsWithoutPaginationAsync();
 
-        var toDoItemDtos = toDoItems.Adapt<List<GrpcToDoItemModel>>();
+        var toDoItemDtos = toDoItems.Adapt<List<ToDoItemDto>>();
 
-        response.ToDoItem.AddRange(toDoItemDtos);
+        var grpcToDoItemModels = toDoItemDtos.Adapt<List<GrpcToDoItemModel>>();
+
+        response.ToDoItem.AddRange(grpcToDoItemModels);
 
         return response;
     }

@@ -146,6 +146,9 @@ public class ToDoItemBusiness : IToDoItemBusiness
 
         var createdToDoItemDto = createdToDoItem.Adapt<ToDoItemDto>();
 
+        createdToDoItemDto.ToDoListGuid = toDoList.Guid;
+        createdToDoItemDto.CategoryGuid = toDoItemDto.CategoryGuid;
+
         var toDoItemPublishedDto = new ToDoItemPublishedDto
         {
             ToDoItemDto = createdToDoItemDto,

@@ -16,7 +16,7 @@ message GrpcToDoItemModel {
   bool isCompleted = 3;
   string dueDate = 4;
   sint32 priority = 5;
-  string listGuid = 6;
+  string toDoListGuid = 6;
   google.protobuf.StringValue categoryGuid = 7;
   google.protobuf.StringValue description = 8;
 }

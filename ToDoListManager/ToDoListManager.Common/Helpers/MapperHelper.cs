@@ -11,5 +11,11 @@ public class MapperHelper
         TypeAdapterConfig<User, UserDto>
             .NewConfig()
             .Map(userDto => userDto.FirstName, user => user.Person!.FullName);
+
+        TypeAdapterConfig<ToDoItem, ToDoItemDto>
+            .NewConfig()
+            .Map(toDoItemDto => toDoItemDto.ToDoListGuid, toDoItem => toDoItem.ToDoList!.Guid)
+            .Map(toDoItemDto => toDoItemDto.CategoryGuid, toDoItem => toDoItem.Category!.Guid)
+            .IgnoreIf((toDoItem, _) => toDoItem.Category == null, nameof(ToDoItemDto.CategoryGuid));
     }
 }
